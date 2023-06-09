@@ -1,3 +1,4 @@
 import m from "mithril";
-let msg: string = "hello world";
-m.render(document.body, msg);
+import UserList from "./views/UserList"
+
+m.mount(document.body, UserList)

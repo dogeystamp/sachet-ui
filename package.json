@@ -11,8 +11,11 @@
   "author": "dogeystamp",
   "license": "GPL-3.0",
   "dependencies": {
+    "@marcj/marshal": "^2.1.13",
     "esbuild": "0.17.18",
-    "mithril": "^2.2.2"
+    "mithril": "^2.2.2",
+    "moment": "^2.29.4",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@craftamap/esbuild-plugin-html": "^0.5.0",
