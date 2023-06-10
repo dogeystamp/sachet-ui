@@ -1,17 +1,7 @@
-import api from "../services/api"
-import { PropertyValidatorError, f, validatedPlainToClass } from "@marcj/marshal"
+import { f, validatedPlainToClass } from "@marcj/marshal"
 import "reflect-metadata"
 import "moment"
-
-export enum Permissions {
-	CREATE,
-	MODIFY,
-	DELETE,
-	LOCK,
-	LIST,
-	READ,
-	ADMIN
-}
+import Pager from "../services/pagination";
 
 export class Share {
 	@f.primary().uuid()
@@ -27,20 +17,13 @@ export class Share {
 }
 
 const ShareModel = {
+	page: new Pager<Share>({ per_page: 3, url: "/files" }),
 	list: [] as Share[],
-	loadList: async function() {
-		const result = await api.request<{ data: Share[] }>({
-			method: "GET",
-			url: "http://localhost:5000/files",
-			params: {
-				"page": "1",
-				"per_page": "300"
-			}
+	loadList: async function(page: number = 1) {
+		await ShareModel.page.loadPage(page)
+		ShareModel.list = ShareModel.page.data.map((share: Share) => {
+			return validatedPlainToClass(Share, share)
 		})
-
-		ShareModel.list = result.data.map((raw: any) => {
-			return validatedPlainToClass(Share, raw)
-		});
 	}
 }
 

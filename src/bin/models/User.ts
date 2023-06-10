@@ -2,6 +2,7 @@ import api from "../services/api"
 import { PropertyValidatorError, f, validatedPlainToClass } from "@marcj/marshal"
 import "reflect-metadata"
 import "moment"
+import Pager from "../services/pagination";
 
 export enum Permissions {
 	CREATE,
@@ -29,19 +30,13 @@ export class User {
 }
 
 const UserModel = {
+	page: new Pager<User>({ per_page: 3, url: "/users" }),
 	list: [] as User[],
-	loadList: async function() {
-		const result = await api.request<{ data: User[] }>({
-			method: "GET",
-			url: "http://localhost:5000/users",
-			params: {
-				"page": "1",
-				"per_page": "300"
-			}
-		})
+	loadList: async function(page: number = 1) {
+		await UserModel.page.loadPage(page)
 
-		UserModel.list = result.data.map((raw: any) => {
-			return validatedPlainToClass(User, raw)
+		UserModel.list = UserModel.page.data.map((user: User) => {
+			return validatedPlainToClass(User, user)
 		});
 	}
 }
