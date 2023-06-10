@@ -2,16 +2,18 @@ import m from "mithril"
 import Mithril from "mithril"
 
 const api = {
-	request: <T>(params: { url: string } & Mithril.RequestOptions<any> ): Promise<T> => {
+	request: async <T>(params: { url: string } & Mithril.RequestOptions<any> ): Promise<T> => {
 		params.config = (xhr: XMLHttpRequest) => {
 			//xhr.setRequestHeader("Authorization", "Bearer " + api.token())
 		}
 
 		try {
-			return m.request(params)
+			let req: Promise<T> = m.request(params)
+			return await req
 		} catch (error) {
-			if (error.code == 401)
+			if (error.code == 401) {
 				m.route.set("/login")
+			}
 
 			throw error
 		}
