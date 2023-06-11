@@ -29,7 +29,7 @@ body {
 	margin: 0em .5em;
 }
 
-.userwidget {
+.userwidget-login {
 	margin: auto;
 }
 
@@ -54,7 +54,7 @@ body {
 		flex-flow: column nowrap;
 	}
 
-	.userwidget {
+	.userwidget-login {
 		text-align: center;
 	}
 }

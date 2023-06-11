@@ -1,4 +1,5 @@
 import m, { Component } from "mithril"
+import UserWidget from "../components/UserWidget"
 
 const Layout: Component = {
 	view: function(vnode) {
@@ -11,7 +12,7 @@ const Layout: Component = {
 					m(m.route.Link, {href: "/upload"}, "Upload"),
 					m(m.route.Link, {href: "/admin"}, "Admin"),
 				]),
-				m("t.userwidget", ["Logged in as ", m("b", "dogeystamp")]),
+				m(UserWidget)
 			]),
 			m("section", vnode.children)
 		])
