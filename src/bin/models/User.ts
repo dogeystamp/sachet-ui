@@ -29,18 +29,18 @@ export class User {
 	permissions: Permissions[]
 }
 
-const UserModel = {
+const UserList = {
 	page: new Pager<User>({ per_page: 3, url: "/users" }),
 	list: [] as User[],
 	loadList: async function(page: number = 1) {
-		await UserModel.page.loadPage(page)
+		await UserList.page.loadPage(page)
 
-		UserModel.list = UserModel.page.data.map((user: User) => {
+		UserList.list = UserList.page.data.map((user: User) => {
 			return validatedPlainToClass(User, user)
 		});
 	}
 }
 
-type UserModel = typeof UserModel
+type UserList = typeof UserList
 
-export default UserModel
+export default UserList

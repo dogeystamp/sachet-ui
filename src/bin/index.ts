@@ -1,12 +1,12 @@
-import m from "mithril";
-import UserList from "./views/UserList"
+import m from "mithril"
 import ShareList from "./views/ShareList"
-import Layout from "./views/Layout";
+import AdminView from "./views/Admin"
+import Layout from "./views/Layout"
 
 m.route(document.body, "/files", {
-	"/users": {
+	"/admin": {
 		render: function() {
-			return m(Layout, m(UserList))
+			return m(Layout, m(AdminView))
 		}
 	},
 	"/files": {
