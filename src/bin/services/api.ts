@@ -7,6 +7,8 @@ const api = {
 			//xhr.setRequestHeader("Authorization", "Bearer " + api.token())
 		}
 
+		params.url = "http://localhost:5000" + params.url
+
 		try {
 			let req: Promise<T> = m.request(params)
 			return await req

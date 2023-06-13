@@ -23,7 +23,7 @@ class Pager<T> {
 
 		const result = await api.request<{ data: T[], pages: number }>({
 			method: "GET",
-			url: "http://localhost:5000" + this.url,
+			url: this.url,
 			params: {
 				"page": this.page,
 				"per_page": this.per_page
