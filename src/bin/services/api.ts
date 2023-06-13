@@ -4,7 +4,7 @@ import Mithril from "mithril"
 const api = {
 	request: async <T>(params: { url: string } & Mithril.RequestOptions<any> ): Promise<T> => {
 		params.config = (xhr: XMLHttpRequest) => {
-			//xhr.setRequestHeader("Authorization", "Bearer " + api.token())
+			xhr.setRequestHeader("Authorization", "Bearer " + api.token())
 		}
 
 		params.url = "http://localhost:5000" + params.url
