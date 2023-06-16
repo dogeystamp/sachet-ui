@@ -5,20 +5,30 @@ const Auth = {
 		interface LoginRes {
 			auth_token: string
 		}
-		const res: LoginRes = await api.request({
+		const loginRes: LoginRes = await api.request({
 			url: "/users/login", method: "POST", body: {
 				"username": username,
 				"password": password
 			}
 		})
 
-		api.token(res.auth_token)
+		api.token(loginRes.auth_token)
 
 		Auth.username = username
 		Auth.authenticated = true
+
+		interface WhoamiRes {
+			username: string
+			permissions: string[]
+		}
+		const whoamiRes: WhoamiRes = await api.request({
+			url: "/whoami", method: "get"
+		})
+		Auth.permissions = whoamiRes.permissions
 	},
 	authenticated: false,
-	username: ""
+	username: "",
+	permissions: [] as string[]
 }
 
 export default Auth

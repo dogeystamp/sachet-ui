@@ -1,5 +1,6 @@
 import m, { Component } from "mithril"
 import UserWidget from "../components/UserWidget"
+import Auth from "../models/Auth"
 
 const Layout: Component = {
 	view: function(vnode) {
@@ -8,9 +9,9 @@ const Layout: Component = {
 				m("h2.header-title", "Sachet"),
 				m("nav.menu", [
 					m(m.route.Link, {href: "/docs"}, "Help"),
-					m(m.route.Link, {href: "/files"}, "Shares"),
-					m(m.route.Link, {href: "/upload"}, "Upload"),
-					m(m.route.Link, {href: "/admin"}, "Admin"),
+					Auth.permissions.includes("LIST") && m(m.route.Link, {href: "/files"}, "Shares"),
+					Auth.permissions.includes("CREATE") && m(m.route.Link, {href: "/upload"}, "Upload"),
+					Auth.permissions.includes("ADMIN") && m(m.route.Link, {href: "/admin"}, "Admin"),
 				]),
 				m(UserWidget)
 			]),
