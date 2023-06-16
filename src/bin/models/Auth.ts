@@ -14,9 +14,14 @@ const Auth = {
 
 		api.token(loginRes.auth_token)
 
+		Auth.getPerms()
+
 		Auth.username = username
 		Auth.authenticated = true
-
+	},
+	authenticated: false,
+	username: "",
+	getPerms: async () => {
 		interface WhoamiRes {
 			username: string
 			permissions: string[]
@@ -26,8 +31,6 @@ const Auth = {
 		})
 		Auth.permissions = whoamiRes.permissions
 	},
-	authenticated: false,
-	username: "",
 	permissions: [] as string[]
 }
 

@@ -5,7 +5,7 @@ import Layout from "./views/Layout"
 
 // TODO: actually move this into a login page
 import Auth from "./models/Auth"
-Auth.login({ username: "user", password: "password123" }).then(() => {
+Auth.getPerms().then(() => {
 	m.route(document.body, "/files", {
 		"/admin": {
 			render: function() {
