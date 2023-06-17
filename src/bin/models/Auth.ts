@@ -1,4 +1,5 @@
 import api from "../services/api"
+import m from "mithril"
 
 const Auth = {
 	login: async ({ username, password }: { username: string, password: string }) => {
@@ -15,6 +16,13 @@ const Auth = {
 		api.token(loginRes.auth_token)
 
 		Auth.getPerms()
+	},
+	logout: async () => {
+		api.request({url: "/users/logout", method: "POST", body: {
+			token: api.token()
+		}})
+		api.tokenRemove()
+		m.route.set("/")
 	},
 	get authenticated() {
 		return api.token() !== null

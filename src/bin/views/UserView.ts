@@ -1,5 +1,6 @@
 import m, { Component } from "mithril";
 import { User, loadUser } from "../models/User"
+import Auth from "../models/Auth";
 
 export declare namespace UserView {
 	interface State {
@@ -28,7 +29,12 @@ const UserView: Component<UserView.Attrs, UserView.State> = {
 						m("b.field-title", "Permissions: "),
 						m("t.field-content", vnode.state.userData.permissions.join(", "))
 					),
-				)
+				),
+				Auth.username == vnode.state.userData.username && m("button", {
+					onclick: () => {
+						Auth.logout()
+					}
+				}, "Log out")
 			]
 		}
 	}
