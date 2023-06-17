@@ -28,39 +28,41 @@ const LoginView: Component = {
 			m.route.set("/")
 		}
 
-		return [
-			m("h2", "Login"),
-			m("label.form-label", "Username"),
-			m("input.form-textbox#username", {
-				oninput: (e: Event) => {
-					const { target } = e
-					if (target) LoginSchema.username = (target as HTMLInputElement).value
-				},
-				onkeypress: (e: KeyboardEvent) => {
-					if (e.key == "Enter") {
+		return m(".login-box",
+			m(".login-form",
+				m("h2", "Login"),
+				m("label.form-label", "Username"),
+				m("input.form-textbox#username", {
+					oninput: (e: Event) => {
+						const { target } = e
+						if (target) LoginSchema.username = (target as HTMLInputElement).value
+					},
+					onkeypress: (e: KeyboardEvent) => {
+						if (e.key == "Enter") {
+							LoginSchema.login()
+						}
+					},
+				}),
+				m("label.form-label", "Password"),
+				m("input.form-textbox#password[type=password]", {
+					oninput: (e: Event) => {
+						const { target } = e
+						if (target) LoginSchema.password = (target as HTMLInputElement).value
+					},
+					onkeypress: (e: KeyboardEvent) => {
+						if (e.key == "Enter") {
+							LoginSchema.login()
+						}
+					},
+				}),
+				m("button.form-button", {
+					onclick: async () => {
 						LoginSchema.login()
 					}
-				},
-			}),
-			m("label.form-label", "Password"),
-			m("input.form-textbox#password[type=password]", {
-				oninput: (e: Event) => {
-					const { target } = e
-					if (target) LoginSchema.password = (target as HTMLInputElement).value
-				},
-				onkeypress: (e: KeyboardEvent) => {
-					if (e.key == "Enter") {
-						LoginSchema.login()
-					}
-				},
-			}),
-			m("button.form-button", {
-				onclick: async () => {
-					LoginSchema.login()
-				}
-			}, "Log in"),
-			m(".form-error", LoginSchema.error),
-		]
+				}, "Log in"),
+				m(".form-error", LoginSchema.error),
+			)
+		)
 	}
 }
 

@@ -30,7 +30,7 @@ const UserView: Component<UserView.Attrs, UserView.State> = {
 						m("t.field-content", vnode.state.userData.permissions.join(", "))
 					),
 				),
-				Auth.username == vnode.state.userData.username && m("button", {
+				Auth.username == vnode.state.userData.username && m("button.form-button", {
 					onclick: () => {
 						Auth.logout()
 					}

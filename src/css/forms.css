@@ -1,4 +1,39 @@
-.form-label, .form-field, .form-button {
-	display: block;
+.form-button, .form-textbox {
+	font: 18px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.login-form {
+	display: inline-flex;
+	padding: 1em 4em;
+	flex-flow: column nowrap;
+	align-items: center;
+	border: solid #dddddd 2px;
+	border-radius: .5vmin;
+	background: #fafafa;
+}
+
+.login-box {
+	text-align: center;
+}
+
+.form-textbox, .form-button {
 	margin: .5em 0;
+}
+
+.form-textbox {
+	background: #fdfdfd;
+}
+
+.form-textbox, .form-button {
+	border: 2px solid #aaaaaa;
+	border-radius: 0.5vmin;
+	transition-duration: 0.1s;
+}
+
+.form-textbox:focus, .form-button:focus {
+	outline: none;
+}
+
+.form-textbox:focus, .form-button:focus {
+	border: 2px solid #444444;
 }
