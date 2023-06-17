@@ -29,7 +29,7 @@ export class User {
 	permissions: Permissions[]
 }
 
-const UserList = {
+export const UserList = {
 	page: new Pager<User>({ per_page: 3, url: "/users" }),
 	list: [] as User[],
 	loadList: async function(page: number = 1) {
@@ -43,4 +43,7 @@ const UserList = {
 
 type UserList = typeof UserList
 
-export default UserList
+export const loadUser = async (username: string) => {
+	const resp = await api.request<User>({ url: "/users/" + username, method: "GET" })
+	return validatedPlainToClass(User, resp)
+}
