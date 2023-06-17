@@ -1,6 +1,6 @@
 # sachet-ui
 
-This is the frontend for [Sachet](https://github.com/dogeystamp/sachet), a small file-sharing service.
+This is the frontend for [Sachet](https://github.com/dogeystamp/sachet-server), a small file-sharing service.
 
 ## development
 
