@@ -15,11 +15,10 @@ const Auth = {
 		api.token(loginRes.auth_token)
 
 		Auth.getPerms()
-
-		Auth.username = username
-		Auth.authenticated = true
 	},
-	authenticated: false,
+	get authenticated() {
+		return api.token() !== null
+	},
 	username: "",
 	getPerms: async () => {
 		interface WhoamiRes {
@@ -29,6 +28,7 @@ const Auth = {
 		const whoamiRes: WhoamiRes = await api.request({
 			url: "/whoami", method: "get"
 		})
+		Auth.username = whoamiRes.username
 		Auth.permissions = whoamiRes.permissions
 	},
 	permissions: [] as string[]
