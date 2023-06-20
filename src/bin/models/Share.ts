@@ -2,6 +2,7 @@ import { f, validatedPlainToClass } from "@marcj/marshal"
 import "reflect-metadata"
 import "moment"
 import Pager from "../services/pagination";
+import api from "../services/api";
 
 export class Share {
 	@f.primary().uuid()
@@ -30,3 +31,8 @@ const ShareModel = {
 type ShareModel = typeof ShareModel
 
 export default ShareModel
+
+export const loadShare = async (shareId: string) => {
+	const resp = await api.request<Share>({ url: "/files/" + shareId, method: "GET" })
+	return validatedPlainToClass(Share, resp)
+}

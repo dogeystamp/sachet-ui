@@ -3,6 +3,7 @@ import ShareList from "./views/ShareList"
 import AdminView from "./views/Admin"
 import Layout from "./views/Layout"
 import UserView from "./views/UserView"
+import ShareView from "./views/ShareView"
 
 import Auth from "./models/Auth"
 import LoginView from "./views/LoginView"
@@ -18,6 +19,11 @@ Auth.getPerms().then(() => {
 				return m(Layout, m(ShareList))
 			}
 		},
+		"/files/:fileId": {
+			render: function(vnode) {
+				return m(Layout, m(ShareView, { key: m.route.param("fileId"), ...vnode.attrs }))
+			}
+		},
 		"/login": {
 			render: function() {
 				return m(Layout, m(LoginView))
@@ -25,7 +31,7 @@ Auth.getPerms().then(() => {
 		},
 		"/users/:username": {
 			render: function(vnode) {
-				return m(Layout, m(UserView, vnode.attrs))
+				return m(Layout, [m(UserView, { key: m.route.param("username"), ...vnode.attrs })])
 			}
 		},
 	})

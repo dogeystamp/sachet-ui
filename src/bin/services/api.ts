@@ -2,7 +2,8 @@ import m from "mithril"
 import Mithril from "mithril"
 
 const api = {
-	request: async <T>(params: { url: string } & Mithril.RequestOptions<any> ): Promise<T> => {
+	baseUrl: "http://localhost:5000",
+	request: async <T>(params: { url: string } & Mithril.RequestOptions<any>): Promise<T> => {
 		params.config = (xhr: XMLHttpRequest) => {
 			const tok = api.token();
 			if (tok !== null) {
@@ -10,7 +11,7 @@ const api = {
 			}
 		}
 
-		params.url = "http://localhost:5000" + params.url
+		params.url = api.baseUrl + params.url
 
 		try {
 			let req: Promise<T> = m.request(params)
