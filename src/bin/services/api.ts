@@ -4,10 +4,14 @@ import Mithril from "mithril"
 const api = {
 	baseUrl: "http://localhost:5000",
 	request: async <T>(params: { url: string } & Mithril.RequestOptions<any>): Promise<T> => {
+		const oldConfig = params.config
 		params.config = (xhr: XMLHttpRequest) => {
 			const tok = api.token();
 			if (tok !== null) {
 				xhr.setRequestHeader("Authorization", "Bearer " + api.token())
+			}
+			if (oldConfig) {
+				oldConfig(xhr, params)
 			}
 		}
 

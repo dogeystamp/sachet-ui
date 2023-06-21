@@ -1,15 +1,10 @@
 import m, { Component } from "mithril";
-import { Share, loadShare } from "../models/Share";
-import api from "../services/api";
+import { ShareModel } from "../models/Share";
+import { formatBytes } from "../services/util";
 
 export declare namespace ShareView {
 	interface State {
-		shareData: Share
-		dl: {
-			loaded: Number
-			total: Number
-			status: Number
-		}
+		model: ShareModel
 	}
 	interface Attrs {
 		fileId: string
@@ -18,57 +13,36 @@ export declare namespace ShareView {
 
 const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 	oninit: async (vnode) => {
-		vnode.state.shareData = await loadShare(vnode.attrs.fileId)
-		vnode.state.dl = { loaded: 0, total: 0, status: 0 }
+		vnode.state.model = new ShareModel(vnode.attrs.fileId)
 	},
 	view: (vnode) => {
-		if (!vnode.state.shareData) return
+		if (vnode.state.model.meta === undefined) return
 
-		const data = vnode.state.shareData
-		const dl = vnode.state.dl
+		const meta = vnode.state.model.meta
+		const dl = vnode.state.model.dl
 
 		return [
-			m("h2", "Share '" + data.file_name + "'"),
+			m("h2", "Share '" + meta.file_name + "'"),
 			m("ul.fields",
 				m("li.field",
 					m("b.field-title", "Creation date: "),
-					m("t.field-content", data.create_date.format("MMMM Do YYYY, h:mm:ss a"))
+					m("t.field-content", meta.create_date.format("MMMM Do YYYY, h:mm:ss a"))
 				),
 				m("li.field",
 					m("b.field-title", "Owner: "),
-					m("t.field-content", data.owner_name || "[Anonymous]")
+					m("t.field-content", meta.owner_name || "[Anonymous]")
 				),
 				m("li.field",
 					m("b.field-title", "Locked: "),
-					m("t.field-content", data.locked ? "Yes" : "No")
+					m("t.field-content", meta.locked ? "Yes" : "No")
 				),
 			),
 			m("button.form-button", {
 				onclick: async () => {
-					if (dl.status != 0) return
-
-					const blob: Blob = await api.request({
-						url: "/files/" + data.share_id + "/content",
-						responseType: "blob",
-						extract: xhr => xhr.response,
-						config: xhr => {
-							xhr.timeout = 20000
-							xhr.onprogress = e => {
-								dl.status = xhr.status
-								dl.loaded = e.loaded
-								dl.total = e.total
-								console.log("AAHAAAH AH AH AH")
-								m.redraw()
-							}
-						}
-					})
-					const blobUrl = window.URL.createObjectURL(
-						new File([blob], data.file_name, { type: blob.type })
-					)
-					window.open(blobUrl, "_blank").focus()
+					dl.start()
 				}
 			}, "Download"),
-			dl.status != 0 && m("li.field", `Progress: ${dl.loaded} / ${dl.total}`)
+			dl.status != 0 && m("li.field", `Progress: ${formatBytes(dl.loaded)} / ${formatBytes(dl.total)}`)
 		]
 	}
 }

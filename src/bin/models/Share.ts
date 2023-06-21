@@ -3,6 +3,7 @@ import "reflect-metadata"
 import "moment"
 import Pager from "../services/pagination";
 import api from "../services/api";
+import m from "mithril"
 
 export class Share {
 	@f.primary().uuid()
@@ -17,22 +18,56 @@ export class Share {
 	file_name: string
 }
 
-const ShareModel = {
+const ShareList = {
 	page: new Pager<Share>({ per_page: 3, url: "/files" }),
 	list: [] as Share[],
 	loadList: async function(page: number = 1) {
-		await ShareModel.page.loadPage(page)
-		ShareModel.list = ShareModel.page.data.map((share: Share) => {
+		await ShareList.page.loadPage(page)
+		ShareList.list = ShareList.page.data.map((share: Share) => {
 			return validatedPlainToClass(Share, share)
 		})
 	}
 }
 
-type ShareModel = typeof ShareModel
+type ShareList = typeof ShareList
 
-export default ShareModel
+export default ShareList
 
-export const loadShare = async (shareId: string) => {
-	const resp = await api.request<Share>({ url: "/files/" + shareId, method: "GET" })
-	return validatedPlainToClass(Share, resp)
+export class ShareModel {
+	constructor(shareId: string) {
+		this.loadMeta(shareId)
+	}
+	loadMeta = async (shareId: string) => {
+		const resp = await api.request<Share>({ url: "/files/" + shareId, method: "GET" })
+		this.meta = validatedPlainToClass(Share, resp)
+	}
+	meta: Share
+	data: Blob
+	dl = {
+		loaded: 0,
+		total: 0,
+		status: 0,
+		start: async () => {
+			if (this.dl.status != 0) return
+
+			const blob: Blob = await api.request({
+				url: "/files/" + this.meta.share_id + "/content",
+				responseType: "blob",
+				extract: xhr => xhr.response,
+				config: xhr => {
+					xhr.timeout = 200000
+					xhr.onprogress = e => {
+						this.dl.status = xhr.status
+						this.dl.loaded = e.loaded
+						this.dl.total = e.total
+						m.redraw()
+					}
+				}
+			})
+			const blobUrl = window.URL.createObjectURL(
+				new File([blob], this.meta.file_name, { type: blob.type })
+			)
+			window.open(blobUrl, "_blank").focus()
+		}
+	}
 }

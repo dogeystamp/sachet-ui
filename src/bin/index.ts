@@ -1,5 +1,5 @@
 import m from "mithril"
-import ShareList from "./views/ShareList"
+import ShareListView from "./views/ShareList"
 import AdminView from "./views/Admin"
 import Layout from "./views/Layout"
 import UserView from "./views/UserView"
@@ -16,7 +16,7 @@ Auth.getPerms().then(() => {
 		},
 		"/files": {
 			render: function() {
-				return m(Layout, m(ShareList))
+				return m(Layout, m(ShareListView))
 			}
 		},
 		"/files/:fileId": {
