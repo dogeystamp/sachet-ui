@@ -21,6 +21,13 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 		const meta = vnode.state.model.meta
 		const dl = vnode.state.model.dl
 
+		if (!vnode.state.model.meta.initialized) {
+			return [
+				m("h2", "Share '" + meta.file_name + "'"),
+				m("t", "Share has not been uploaded yet. Return later once the upload is complete.")
+			]
+		}
+
 		return [
 			m("h2", "Share '" + meta.file_name + "'"),
 			m("ul.fields",

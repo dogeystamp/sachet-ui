@@ -16,6 +16,8 @@ export class Share {
 	owner_name: string
 	@f
 	file_name: string
+	@f
+	initialized: boolean
 }
 
 const ShareList = {
