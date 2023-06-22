@@ -55,7 +55,7 @@ export class ShareModel {
 				responseType: "blob",
 				extract: xhr => xhr.response,
 				config: xhr => {
-					xhr.timeout = 200000
+					xhr.timeout = 0
 					xhr.onprogress = e => {
 						this.dl.status = xhr.status
 						this.dl.loaded = e.loaded
@@ -64,10 +64,11 @@ export class ShareModel {
 					}
 				}
 			})
-			const blobUrl = window.URL.createObjectURL(
-				new File([blob], this.meta.file_name, { type: blob.type })
-			)
-			window.open(blobUrl, "_blank").focus()
+			const blobUrl = window.URL.createObjectURL(blob)
+			const anchor = document.createElement("a")
+			anchor.href = blobUrl
+			anchor.download = this.meta.file_name
+			anchor.click()
 		}
 	}
 }
