@@ -1,3 +1,6 @@
+import { Moment } from "moment";
+import m from "mithril"
+
 /**
 * Format bytes as human-readable text.
 * 
@@ -29,4 +32,10 @@ export function formatBytes(bytes: number, si = false, dp = 2) {
 
 
 	return bytes.toFixed(dp) + ' ' + units[u];
+}
+
+export function formatMoment(
+	{ date, relative = false }: { date: Moment, relative: boolean }
+) {
+	return m("m.date", relative ? date.fromNow() : date.format("YYYY/MM/DD"))
 }

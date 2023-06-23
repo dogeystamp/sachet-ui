@@ -11,7 +11,7 @@ class Pager<T> {
 	per_page = 1
 	pages: number
 
-	private _page: number = 1
+	private _page: number = null
 	public get page() {
 		return this._page
 	}

@@ -1,0 +1,25 @@
+.entrylist {
+	width: 100%;
+	overflow-x: auto;
+}
+
+.entrylist-table {
+	width: 100%;
+}
+
+.entrylist-pager-row {
+	text-align: justified;
+}
+
+.entrylist-row td {
+	border-top: 1px solid black;
+}
+
+.entrylist-row:nth-child(even) {
+	background-color: #F1F1F1;
+}
+
+.entrylist-row:hover {
+	background: #dddddd;
+	cursor: pointer;
+}
