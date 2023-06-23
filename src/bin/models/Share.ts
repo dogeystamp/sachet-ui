@@ -21,11 +21,11 @@ export class Share {
 }
 
 const ShareList = {
-	page: new Pager<Share>({ per_page: 3, url: "/files" }),
+	pager: new Pager<Share>({ per_page: 3, url: "/files" }),
 	list: [] as Share[],
 	loadList: async function(page: number = 1) {
-		await ShareList.page.loadPage(page)
-		ShareList.list = ShareList.page.data.map((share: Share) => {
+		await ShareList.pager.loadPage(page)
+		ShareList.list = ShareList.pager.data.map((share: Share) => {
 			return validatedPlainToClass(Share, share)
 		})
 	}
