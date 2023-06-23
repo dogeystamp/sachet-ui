@@ -21,7 +21,7 @@ export class Share {
 }
 
 const ShareList = {
-	pager: new Pager<Share>({ per_page: 3, url: "/files" }),
+	pager: new Pager<Share>({ per_page: 10, url: "/files" }),
 	list: [] as Share[],
 	loadList: async function(page: number = 1) {
 		await ShareList.pager.loadPage(page)

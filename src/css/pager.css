@@ -1,0 +1,21 @@
+.pagelist {
+	display: inline-flex;
+	flex-flow: row wrap;
+	justify-content: flex-start;
+}
+
+.pagelist-number, .pagelist-cur {
+	margin: 0 .2em;
+	text-decoration: none;
+}
+
+.pagelist-next, .pagelist-prev {
+	color: black;
+	margin: 0 1em;
+}
+
+.pagelist-cur {
+	color: black;
+	font-weight: bold;
+	text-decoration: underline;
+}

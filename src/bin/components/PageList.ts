@@ -21,7 +21,22 @@ class PageList<T> implements ClassComponent<PageListAttrs<T>> {
 					model.loadList(pager.page - 1)
 				}
 			}, "Prev"),
-			m("a.pagelist-number", pager.page.toString()),
+			Array.from({ length: pager.pages }, (v, i) => (i + 1)).map((page: number) => {
+				if (page == pager.page)
+					return m("a.pagelist-cur", {
+						href: "#", onclick: (e: Event) => {
+							e.preventDefault()
+							model.loadList(page)
+						}
+					}, page.toString())
+				else
+					return m("a.pagelist-number", {
+						href: "#", onclick: (e: Event) => {
+							e.preventDefault()
+							model.loadList(page)
+						}
+					}, page.toString())
+			}),
 			pager.page < pager.pages && m("a.pagelist-prev", {
 				href: "#", onclick: (e: Event) => {
 					e.preventDefault()
