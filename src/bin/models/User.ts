@@ -30,12 +30,12 @@ export class User {
 }
 
 export const UserList = {
-	page: new Pager<User>({ per_page: 3, url: "/users" }),
+	pager: new Pager<User>({ per_page: 12, url: "/users" }),
 	list: [] as User[],
 	loadList: async function(page: number = 1) {
-		await UserList.page.loadPage(page)
+		await UserList.pager.loadPage(page)
 
-		UserList.list = UserList.page.data.map((user: User) => {
+		UserList.list = UserList.pager.data.map((user: User) => {
 			return validatedPlainToClass(User, user)
 		});
 	}

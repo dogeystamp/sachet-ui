@@ -1,13 +1,37 @@
 import m, { Component } from "mithril"
-import { UserList } from "../models/User"
+import { User, UserList } from "../models/User"
+import { formatDate } from "../services/util"
+import PageList from "./PageList"
 
 const UserListComp: Component = {
-	oninit: () => { UserList.loadList(1) },
-	view: function() {
-		return m(".user-list", UserList.list.map((user) => {
-			return m(".user-list-item", user.username + " " + user.register_date.toDate() + " " + user.permissions)
-		}))
-	}
+	oninit: () => {
+		if (UserList.pager.page == null)
+			UserList.loadList(1)
+	},
+	view: () => [
+		m(".entrylist",
+			m("table.entrylist-table",
+				m("tr.entrylist",
+					m("th", "Username"),
+					m("th", "Permissions"),
+					m("th", "Registration date"),
+				),
+				UserList.list.map(user => {
+					return m(
+						m.route.Link,
+						{
+							href: "/users/" + user.username,
+							selector: "tr.entrylist-row",
+						},
+						m("td", user.username),
+						m("td", user.permissions.join(", ")),
+						m("td", formatDate({ date: user.register_date }))
+					)
+				}),
+			),
+		),
+		m(new PageList<User>, { listModel: UserList })
+	]
 }
 
 export default UserListComp
