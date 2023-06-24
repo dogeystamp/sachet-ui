@@ -1,7 +1,7 @@
 import m, { Component } from "mithril"
 import ShareList, { Share } from "../models/Share"
 import PageList from "../components/PageList"
-import { formatMoment as formatDate } from "../services/util"
+import { formatDate } from "../services/util"
 
 const ShareListView: Component = {
 	oninit: () => {

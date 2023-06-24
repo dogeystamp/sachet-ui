@@ -1,7 +1,7 @@
 import m, { Component } from "mithril";
 import { User, loadUser } from "../models/User"
 import Auth from "../models/Auth";
-import { formatMoment } from "../services/util";
+import { formatDate } from "../services/util";
 
 export declare namespace UserView {
 	interface State {
@@ -23,7 +23,7 @@ const UserView: Component<UserView.Attrs, UserView.State> = {
 				m("ul.fields",
 					m("li.field",
 						m("b.field-title", "Registration: "),
-						m("t.field-content", formatMoment({ date: vnode.state.userData.register_date }))
+						m("t.field-content", formatDate({ date: vnode.state.userData.register_date }))
 					),
 					// TODO: make a better widget for permissions
 					m("li.field",
