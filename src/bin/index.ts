@@ -7,6 +7,7 @@ import ShareView from "./views/ShareView"
 
 import Auth from "./models/Auth"
 import LoginView from "./views/LoginView"
+import UploadView from "./views/Upload"
 Auth.getPerms().then(() => {
 	m.route(document.body, "/files", {
 		"/admin": {
@@ -34,5 +35,10 @@ Auth.getPerms().then(() => {
 				return m(Layout, [m(UserView, { key: m.route.param("username"), ...vnode.attrs })])
 			}
 		},
+		"/upload": {
+			render: function() {
+				return m(Layout, m(UploadView))
+			}
+		}
 	})
 })
