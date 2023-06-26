@@ -28,6 +28,12 @@ const ShareList = {
 		ShareList.list = ShareList.pager.data.map((share: Share) => {
 			return validatedPlainToClass(Share, share)
 		})
+	},
+	reload: async function() {
+		if (ShareList.pager.page == null)
+			await ShareList.loadList(1)
+		else
+			await ShareList.loadList(ShareList.pager.page)
 	}
 }
 
@@ -40,8 +46,14 @@ export class ShareModel {
 		this.loadMeta(shareId)
 	}
 	loadMeta = async (shareId: string) => {
-		const resp = await api.request<Share>({ url: "/files/" + shareId, method: "GET" })
-		this.meta = validatedPlainToClass(Share, resp)
+		try {
+			const resp = await api.request<Share>({ url: "/files/" + shareId, method: "GET" })
+			this.meta = validatedPlainToClass(Share, resp)
+		} catch (e) {
+			if (e.code == 404) {
+				this.meta = null
+			}
+		}
 	}
 	meta: Share
 	data: Blob
@@ -49,7 +61,7 @@ export class ShareModel {
 		loaded: 0,
 		total: 0,
 		status: 0,
-		start: async () => {
+		start: async function() {
 			if (this.dl.status != 0) return
 
 			const blob: Blob = await api.request({
@@ -72,5 +84,11 @@ export class ShareModel {
 			anchor.download = this.meta.file_name
 			anchor.click()
 		}
+	}
+	delete = async function() {
+		api.request({
+			url: "/files/" + this.meta.share_id,
+			method: "DELETE"
+		})
 	}
 }

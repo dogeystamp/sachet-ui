@@ -6,7 +6,7 @@ import { formatDate } from "../services/util"
 const ShareListView: Component = {
 	oninit: () => {
 		if (ShareList.pager.page == null)
-			ShareList.loadList(1)
+			ShareList.reload()
 	},
 	view: function() {
 		return [
