@@ -47,6 +47,7 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 							break
 						case ConfirmState.AwaitConfirm:
 							await vnode.state.model.delete()
+							await ShareList.reload()
 							m.route.set("/files")
 							break
 					}

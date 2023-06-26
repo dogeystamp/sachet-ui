@@ -86,7 +86,7 @@ export class ShareModel {
 		}
 	}
 	delete = async function() {
-		api.request({
+		await api.request({
 			url: "/files/" + this.meta.share_id,
 			method: "DELETE"
 		})

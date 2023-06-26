@@ -18,8 +18,7 @@ const api = {
 		params.url = api.baseUrl + params.url
 
 		try {
-			let req: Promise<T> = m.request(params)
-			return await req
+			 return await m.request(params)
 		} catch (error) {
 			if (error.code == 401) {
 				m.route.set("/login")
