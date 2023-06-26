@@ -61,7 +61,7 @@ export class ShareModel {
 		loaded: 0,
 		total: 0,
 		status: 0,
-		start: async function() {
+		start: async () => {
 			if (this.dl.status != 0) return
 
 			const blob: Blob = await api.request({
