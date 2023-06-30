@@ -24,8 +24,6 @@ const LoginSchema = {
 const LoginView: Component = {
 	view: () => {
 		if (Auth.authenticated) {
-			console.log(Auth.username)
-			console.log(Auth.permissions)
 			const next = m.route.param("next")
 			m.route.set(next || "/")
 			m.redraw()
