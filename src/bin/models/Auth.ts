@@ -16,8 +16,7 @@ const Auth = {
 		})
 
 		api.token(loginRes.auth_token)
-
-		Auth.getPerms()
+		await Auth.getPerms()
 	},
 	_logoutHooks: [] as logoutHook[],
 	addLogoutHook: (f: logoutHook) => {
@@ -33,12 +32,14 @@ const Auth = {
 		Auth.username = ""
 		Auth.permissions = []
 		Auth._logoutHooks.forEach((f) => { f() })
+		Auth._gotPerms = false
 		m.route.set("/login")
 	},
 	get authenticated() {
-		return api.token() !== null
+		return api.token() !== null && Auth._gotPerms
 	},
 	username: "",
+	_gotPerms: false,
 	getPerms: async () => {
 		interface WhoamiRes {
 			username: string
@@ -49,12 +50,13 @@ const Auth = {
 		})
 		Auth.username = whoamiRes.username
 		Auth.permissions = whoamiRes.permissions
+		Auth._gotPerms = true
 	},
 	checkPerm: (perm: string, options: { redirect: boolean } = { redirect: false }) => {
 		if (Auth.permissions.includes(perm)) {
 			return true
 		} else {
-			if (options.redirect === true) {
+			if (options.redirect === true && !Auth.authenticated) {
 				m.route.set("/login", { next: m.route.get() })
 			}
 			return false

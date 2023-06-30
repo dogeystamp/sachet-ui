@@ -1,3 +1,4 @@
+import Auth from "../models/Auth"
 import api from "./api"
 import m from "mithril"
 
@@ -41,6 +42,7 @@ class Pager<T> {
 	constructor(opts: PagerArgs) {
 		this.per_page = opts.per_page
 		this.url = opts.url
+		Auth.addLogoutHook(() => {this._page = null})
 	}
 }
 

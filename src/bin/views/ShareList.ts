@@ -5,7 +5,7 @@ import { formatDate } from "../services/util"
 import Auth from "../models/Auth"
 
 const ShareListView: Component = {
-	onupdate: async () => {
+	oncreate: async () => {
 		if (ShareList.pager.page == null) {
 			if (Auth.checkPerm("LIST", { redirect: true })) {
 				await ShareList.reload()

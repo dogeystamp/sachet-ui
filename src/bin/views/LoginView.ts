@@ -24,6 +24,8 @@ const LoginSchema = {
 const LoginView: Component = {
 	view: () => {
 		if (Auth.authenticated) {
+			console.log(Auth.username)
+			console.log(Auth.permissions)
 			const next = m.route.param("next")
 			m.route.set(next || "/")
 			m.redraw()
@@ -38,9 +40,9 @@ const LoginView: Component = {
 						const { target } = e
 						if (target) LoginSchema.username = (target as HTMLInputElement).value
 					},
-					onkeypress: (e: KeyboardEvent) => {
+					onkeypress: async (e: KeyboardEvent) => {
 						if (e.key == "Enter") {
-							LoginSchema.login()
+							await LoginSchema.login()
 						}
 					},
 				}),
@@ -50,15 +52,15 @@ const LoginView: Component = {
 						const { target } = e
 						if (target) LoginSchema.password = (target as HTMLInputElement).value
 					},
-					onkeypress: (e: KeyboardEvent) => {
+					onkeypress: async (e: KeyboardEvent) => {
 						if (e.key == "Enter") {
-							LoginSchema.login()
+							await LoginSchema.login()
 						}
 					},
 				}),
 				m("button.form-button", {
 					onclick: async () => {
-						LoginSchema.login()
+						await LoginSchema.login()
 					}
 				}, "Log in"),
 				m(".form-error", LoginSchema.error),
