@@ -4,6 +4,7 @@ import "moment"
 import Pager from "../services/pagination";
 import api from "../services/api";
 import m from "mithril"
+import Auth from "./Auth";
 
 export class Share {
 	@f.primary().uuid()
@@ -30,10 +31,15 @@ const ShareList = {
 		})
 	},
 	reload: async function() {
-		if (ShareList.pager.page == null)
+		if (ShareList.pager.page == null) {
 			await ShareList.loadList(1)
-		else
+			Auth.addLogoutHook(() => {
+				ShareList.list = []
+			})
+		}
+		else {
 			await ShareList.loadList(ShareList.pager.page)
+		}
 	}
 }
 
@@ -44,6 +50,10 @@ export default ShareList
 export class ShareModel {
 	constructor(shareId: string) {
 		this.loadMeta(shareId)
+		Auth.addLogoutHook(() => {
+			this.meta = null
+			this.data = null
+		})
 	}
 	loadMeta = async (shareId: string) => {
 		try {

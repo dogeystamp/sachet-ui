@@ -1,6 +1,8 @@
 import api from "../services/api"
 import m from "mithril"
 
+type logoutHook = () => void;
+
 const Auth = {
 	login: async ({ username, password }: { username: string, password: string }) => {
 		interface LoginRes {
@@ -17,6 +19,10 @@ const Auth = {
 
 		Auth.getPerms()
 	},
+	_logoutHooks: [] as logoutHook[],
+	addLogoutHook: (f: logoutHook) => {
+		Auth._logoutHooks.push(f)
+	},
 	logout: async () => {
 		api.request({
 			url: "/users/logout", method: "POST", body: {
@@ -26,6 +32,7 @@ const Auth = {
 		api.tokenRemove()
 		Auth.username = ""
 		Auth.permissions = []
+		Auth._logoutHooks.forEach((f) => { f() })
 		m.route.set("/login")
 	},
 	get authenticated() {

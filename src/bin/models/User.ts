@@ -3,6 +3,7 @@ import { PropertyValidatorError, f, validatedPlainToClass } from "@marcj/marshal
 import "reflect-metadata"
 import "moment"
 import Pager from "../services/pagination";
+import Auth from "./Auth";
 
 export enum Permissions {
 	CREATE,
@@ -38,6 +39,17 @@ export const UserList = {
 		UserList.list = UserList.pager.data.map((user: User) => {
 			return validatedPlainToClass(User, user)
 		});
+	},
+	reload: async function() {
+		if (UserList.pager.page == null) {
+			await UserList.loadList(1)
+			Auth.addLogoutHook(() => {
+				UserList.list = []
+			})
+		}
+		else {
+			await UserList.loadList(UserList.pager.page)
+		}
 	}
 }
 

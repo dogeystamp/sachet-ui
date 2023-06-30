@@ -8,7 +8,7 @@ const UserListComp: Component = {
 	onupdate: () => {
 		if (UserList.pager.page == null) {
 			if (Auth.checkPerm("ADMIN", { redirect: true })) {
-				UserList.loadList(1)
+				UserList.reload()
 			}
 		}
 	},
