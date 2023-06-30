@@ -18,10 +18,10 @@ const api = {
 		params.url = api.baseUrl + params.url
 
 		try {
-			 return await m.request(params)
+			return await m.request(params)
 		} catch (error) {
 			if (error.code == 401) {
-				m.route.set("/login")
+				m.route.set("/login", { next: m.route.get() })
 			}
 
 			throw error

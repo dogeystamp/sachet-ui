@@ -18,11 +18,15 @@ const Auth = {
 		Auth.getPerms()
 	},
 	logout: async () => {
-		api.request({url: "/users/logout", method: "POST", body: {
-			token: api.token()
-		}})
+		api.request({
+			url: "/users/logout", method: "POST", body: {
+				token: api.token()
+			}
+		})
 		api.tokenRemove()
-		m.route.set("/")
+		Auth.username = ""
+		Auth.permissions = []
+		m.route.set("/login")
 	},
 	get authenticated() {
 		return api.token() !== null
@@ -38,6 +42,16 @@ const Auth = {
 		})
 		Auth.username = whoamiRes.username
 		Auth.permissions = whoamiRes.permissions
+	},
+	checkPerm: (perm: string, options: { redirect: boolean } = { redirect: false }) => {
+		if (Auth.permissions.includes(perm)) {
+			return true
+		} else {
+			if (options.redirect === true) {
+				m.route.set("/login", { next: m.route.get() })
+			}
+			return false
+		}
 	},
 	permissions: [] as string[]
 }

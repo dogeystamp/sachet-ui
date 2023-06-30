@@ -2,11 +2,15 @@ import m, { Component } from "mithril"
 import { User, UserList } from "../models/User"
 import { formatDate } from "../services/util"
 import PageList from "./PageList"
+import Auth from "../models/Auth"
 
 const UserListComp: Component = {
-	oninit: () => {
-		if (UserList.pager.page == null)
-			UserList.loadList(1)
+	onupdate: () => {
+		if (UserList.pager.page == null) {
+			if (Auth.checkPerm("ADMIN", { redirect: true })) {
+				UserList.loadList(1)
+			}
+		}
 	},
 	view: () => [
 		m(".entrylist",

@@ -2,11 +2,15 @@ import m, { Component } from "mithril"
 import ShareList, { Share } from "../models/Share"
 import PageList from "../components/PageList"
 import { formatDate } from "../services/util"
+import Auth from "../models/Auth"
 
 const ShareListView: Component = {
-	oninit: () => {
-		if (ShareList.pager.page == null)
-			ShareList.reload()
+	onupdate: async () => {
+		if (ShareList.pager.page == null) {
+			if (Auth.checkPerm("LIST", { redirect: true })) {
+				await ShareList.reload()
+			}
+		}
 	},
 	view: function() {
 		return [

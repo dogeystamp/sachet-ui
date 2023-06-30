@@ -11,7 +11,6 @@ const LoginSchema = {
 			LoginSchema.password = ""
 			LoginSchema.username = ""
 			LoginSchema.error = null
-			m.route.set("/")
 		} catch (error) {
 			if (error.code == 401) {
 				LoginSchema.error = "Invalid credentials."
@@ -25,7 +24,9 @@ const LoginSchema = {
 const LoginView: Component = {
 	view: () => {
 		if (Auth.authenticated) {
-			m.route.set("/")
+			const next = m.route.param("next")
+			m.route.set(next || "/")
+			m.redraw()
 		}
 
 		return m(".login-box",
