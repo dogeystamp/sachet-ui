@@ -28,6 +28,7 @@ const baseConfig = {
 						</body>
 						</html>
 					  `,
+					favicon: "./src/favicon.ico",
 				}
 			]
 		})
