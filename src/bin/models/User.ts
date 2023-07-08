@@ -59,3 +59,30 @@ export const loadUser = async (username: string) => {
 	const resp = await api.request<User>({ url: "/users/" + username, method: "GET" })
 	return validatedPlainToClass(User, resp)
 }
+
+export class UserModel {
+	constructor(username: string) {
+		this.loadMeta(username)
+		Auth.addLogoutHook(() => {
+			this.meta = null
+		})
+	}
+	loadMeta = async (username: string) => {
+		try {
+			const resp = await api.request<User>({ url: "/users/" + username, method: "GET" })
+			this.meta = validatedPlainToClass(User, resp)
+		} catch (e) {
+			if (e.code == 403) {
+				this.meta = null
+			}
+		}
+	}
+	meta: User
+	delete = async function() {
+		await api.request({
+			url: "/users/" + this.meta.username,
+			method: "DELETE"
+		})
+	}
+}
+

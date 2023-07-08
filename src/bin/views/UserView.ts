@@ -1,12 +1,12 @@
 import m, { Component } from "mithril";
-import { User, loadUser } from "../models/User"
+import { UserModel } from "../models/User"
 import Auth from "../models/Auth";
 import { formatDate } from "../services/util";
 import api from "../services/api";
 
 export declare namespace UserView {
 	interface State {
-		userData: User
+		userModel: UserModel
 	}
 	interface Attrs {
 		username: string
@@ -103,34 +103,44 @@ const PwChangeComp: Component = {
 
 const UserView: Component<UserView.Attrs, UserView.State> = {
 	oninit: async (vnode) => {
-		vnode.state.userData = await loadUser(vnode.attrs.username)
+		vnode.state.userModel = new UserModel(vnode.attrs.username)
 	},
 	view: (vnode) => {
-		if (vnode.state.userData !== undefined) {
+		const meta = vnode.state.userModel.meta
+
+		if (meta === undefined) {
+			return
+		} else if (meta == null) {
 			return [
-				m("h2", "User '" + vnode.state.userData.username + "'"),
-				m("ul.fields",
-					m("li.field",
-						m("b.field-title", "Registration: "),
-						m("t.field-content", formatDate({ date: vnode.state.userData.register_date }))
-					),
-					// TODO: make a better widget for permissions
-					m("li.field",
-						m("b.field-title", "Permissions: "),
-						m("t.field-content", vnode.state.userData.permissions.join(", "))
-					),
-				),
-				Auth.username == vnode.state.userData.username && m("button.form-button", {
-					onclick: () => {
-						Auth.logout()
-					}
-				}, "Log out"),
-				m("h3", "Change password"),
-				Auth.username == vnode.state.userData.username ?
-					m(PwChangeComp) :
-					m("t", "Sorry, admins can't change passwords yet..."),
+				m("h2", "Invalid user"),
+				m("t", `The user '${vnode.attrs.username}' does not exist.`)
 			]
 		}
+
+		return [
+			m("h2", "User '" + meta.username + "'"),
+			m("ul.fields",
+				m("li.field",
+					m("b.field-title", "Registration: "),
+					m("t.field-content", formatDate({ date: meta.register_date }))
+				),
+				// TODO: make a better widget for permissions
+				m("li.field",
+					m("b.field-title", "Permissions: "),
+					m("t.field-content", meta.permissions.join(", "))
+				),
+			),
+			Auth.username == meta.username && m("button.form-button", {
+				onclick: () => {
+					Auth.logout()
+				}
+			}, "Log out"),
+			m("h3", "Change password"),
+			Auth.username == meta.username ?
+				m(PwChangeComp) :
+				m("t", "Sorry, admins can't change passwords yet..."),
+
+		]
 	}
 }
 
