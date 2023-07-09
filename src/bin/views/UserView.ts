@@ -1,12 +1,17 @@
 import m, { Component } from "mithril";
-import { UserModel } from "../models/User"
+import { UserList, UserModel } from "../models/User"
 import Auth from "../models/Auth";
 import { formatDate } from "../services/util";
 import api from "../services/api";
 
+enum ConfirmState {
+	Normal,
+	AwaitConfirm,
+}
 export declare namespace UserView {
 	interface State {
-		userModel: UserModel
+		model: UserModel
+		deleteState: ConfirmState
 	}
 	interface Attrs {
 		username: string
@@ -103,10 +108,11 @@ const PwChangeComp: Component = {
 
 const UserView: Component<UserView.Attrs, UserView.State> = {
 	oninit: async (vnode) => {
-		vnode.state.userModel = new UserModel(vnode.attrs.username)
+		vnode.state.model = new UserModel(vnode.attrs.username)
+		vnode.state.deleteState = ConfirmState.Normal
 	},
 	view: (vnode) => {
-		const meta = vnode.state.userModel.meta
+		const meta = vnode.state.model.meta
 
 		if (meta === undefined) {
 			return
@@ -139,7 +145,24 @@ const UserView: Component<UserView.Attrs, UserView.State> = {
 			Auth.username == meta.username ?
 				m(PwChangeComp) :
 				m("t", "Sorry, admins can't change passwords yet..."),
-
+			Auth.checkPerm("ADMIN") &&
+			Auth.username != meta.username &&
+			m("button.form-button", {
+				onclick: async () => {
+					switch (vnode.state.deleteState) {
+						case ConfirmState.Normal:
+							vnode.state.deleteState = ConfirmState.AwaitConfirm
+							break
+						case ConfirmState.AwaitConfirm:
+							await vnode.state.model.delete()
+							await UserList.reload()
+							m.route.set("/admin")
+							break
+					}
+				}
+			}, vnode.state.deleteState == ConfirmState.Normal ?
+				"Delete user" : "Really delete?"
+			)
 		]
 	}
 }
