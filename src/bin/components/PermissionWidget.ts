@@ -20,7 +20,7 @@ export const permissions = {
 		desc: "Lock/unlock any share."
 	},
 	"ADMIN": {
-		desc: "Create users and change any user's permissions."
+		desc: "Administrate the server."
 	},
 }
 

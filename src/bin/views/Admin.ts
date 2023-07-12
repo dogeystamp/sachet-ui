@@ -3,31 +3,37 @@ import UserList from "../components/UserList"
 import { PermissionID, PermissionWidget } from "../components/PermissionWidget"
 import api from "../services/api"
 
-export declare namespace ServerSettings {
-	interface State {
-		settings: {
-			default_permissions: Set<PermissionID>,
-			flag: {
-				changed: boolean
-			}
-		}
-		rawSettings: { default_permissions: PermissionID[] }
-	}
-	interface Attrs { }
+interface SerializedSettings {
+	default_permissions: PermissionID[]
 }
-const ServerSettings: Component<ServerSettings.Attrs, ServerSettings.State> = {
-	oninit: async (vnode) => {
-		vnode.state.rawSettings = await api.request({ url: "/admin/settings" })
-		vnode.state.settings = {
-			default_permissions: new Set<PermissionID>(vnode.state.rawSettings.default_permissions),
-			flag: {
-				changed: false
-			},
+
+const SettingsModel = {
+	init: async function() {
+		const serialized: SerializedSettings = await api.request({ url: "/admin/settings" })
+		SettingsModel.default_permissions = new Set(serialized.default_permissions)
+		SettingsModel.initialized = true
+	},
+	save: async function() {
+		const serialized: SerializedSettings = {
+			default_permissions: Array.from(SettingsModel.default_permissions.values())
 		}
+		await api.request({ url: "/admin/settings", method: "PATCH", body: serialized })
+		SettingsModel.flag.changed = false
+	},
+
+	default_permissions: null as Set<PermissionID>,
+	flag: {
+		changed: false,
+	},
+	initialized: false,
+}
+
+const ServerSettings: Component = {
+	oncreate: async (vnode) => {
+		await SettingsModel.init()
 	},
 	view: (vnode) => {
-		const settings = vnode.state.settings
-		if (settings == null) {
+		if (!SettingsModel.initialized) {
 			return
 		}
 
@@ -36,13 +42,14 @@ const ServerSettings: Component<ServerSettings.Attrs, ServerSettings.State> = {
 			m("h3", "Anonymous permissions"),
 			m("t", "Allow users that are not logged in to:"),
 			m(PermissionWidget, {
-				perms: vnode.state.settings.default_permissions,
-				flag: vnode.state.settings.flag
+				perms: SettingsModel.default_permissions,
+				flag: SettingsModel.flag
 			}),
 			m("button.form-button", {
-				onclick: () => {
+				onclick: async () => {
+					await SettingsModel.save()
 				},
-				disabled: !vnode.state.settings.flag.changed
+				disabled: !SettingsModel.flag.changed
 			}, "Save settings")
 		]
 	}
@@ -53,7 +60,7 @@ const AdminView: Component = {
 			m("h2", "Users"), m(UserList),
 			m("h3", "Create user"),
 			m("t", "TODO"),
-			//m(ServerSettings),
+			m(ServerSettings),
 		)
 	}
 }
