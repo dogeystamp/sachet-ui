@@ -10,18 +10,18 @@ interface SerializedSettings {
 const SettingsModel = {
 	init: async function() {
 		const serialized: SerializedSettings = await api.request({ url: "/admin/settings" })
-		SettingsModel.default_permissions = new Set(serialized.default_permissions)
+		SettingsModel.default_permissions = serialized.default_permissions
 		SettingsModel.initialized = true
 	},
 	save: async function() {
 		const serialized: SerializedSettings = {
-			default_permissions: Array.from(SettingsModel.default_permissions.values())
+			default_permissions: SettingsModel.default_permissions
 		}
 		await api.request({ url: "/admin/settings", method: "PATCH", body: serialized })
 		SettingsModel.flag.changed = false
 	},
 
-	default_permissions: null as Set<PermissionID>,
+	default_permissions: null as PermissionID[],
 	flag: {
 		changed: false,
 	},

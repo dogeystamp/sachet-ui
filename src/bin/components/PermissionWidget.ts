@@ -29,7 +29,7 @@ export type PermissionID = keyof typeof permissions
 export declare namespace PermissionWidget {
 	interface Attrs {
 		// pass these by reference
-		perms: Set<PermissionID>
+		perms: PermissionID[]
 		flag: {changed: boolean}
 	}
 }
@@ -37,19 +37,19 @@ export declare namespace PermissionWidget {
 export const PermissionWidget: Component<PermissionWidget.Attrs> = {
 	view: (vnode) => {
 		if (vnode.attrs.perms === undefined) {
-			vnode.attrs.perms = new Set;
+			vnode.attrs.perms = [];
 		}
 		return Object.keys(permissions).map((permId: PermissionID) => {
 			return m("li.form-checkbox-li",
 				m("input[type=checkbox].form-checkbox", {
-					checked: vnode.attrs.perms.has(permId),
+					checked: vnode.attrs.perms.includes(permId),
 					onchange: (e: Event) => {
 						let tg = e.target as HTMLInputElement
 						if (tg != undefined) {
 							if (tg.checked) {
-								vnode.attrs.perms.add(permId)
+								vnode.attrs.perms.push(permId)
 							} else {
-								vnode.attrs.perms.delete(permId)
+								vnode.attrs.perms.splice(vnode.attrs.perms.indexOf(permId))
 							}
 						}
 						vnode.attrs.flag.changed = true
