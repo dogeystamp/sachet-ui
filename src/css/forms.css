@@ -41,3 +41,10 @@
 .form-textbox:focus, .form-button:focus {
 	border: 2px solid #444444;
 }
+
+.form-checkbox-li {
+	list-style: none;
+}
+.form-checkbox {
+	margin-right: 1em;
+}
