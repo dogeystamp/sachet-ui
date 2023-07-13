@@ -1,7 +1,77 @@
 import m, { Component } from "mithril"
-import UserList from "../components/UserList"
+import UserListComp from "../components/UserList"
 import { PermissionID, PermissionWidget } from "../components/PermissionWidget"
 import api from "../services/api"
+import { UserList } from "../models/User"
+
+const UserCreateSchema = {
+	error: "",
+	username: "",
+	password: "",
+	confirmPassword: "",
+	permissions: [] as PermissionID[],
+	create: async function() {
+		if (this.confirmPassword != this.password) {
+			this.error = "Passwords do not match."
+			return
+		}
+		await api.request({
+			url: "/users", method: "POST", body: {
+				username: this.username,
+				password: this.password,
+				permissions: this.permissions
+			}
+		})
+		this.username = ""
+		this.password = ""
+		this.confirmPassword = ""
+		this.permissions = []
+		this.error = "User created."
+		UserList.reload()
+		m.redraw()
+	}
+}
+
+const UserCreate: Component = {
+	view: () => {
+		return m(".usercreate-form",
+			m("label.form-label", "Username"),
+			m("input.form-textbox#username", {
+				oninput: (e: Event) => {
+					const { target } = e
+					if (target) UserCreateSchema.username = (target as HTMLInputElement).value
+				},
+				value: UserCreateSchema.username,
+			}),
+			m("label.form-label", "Password"),
+			m("input.form-textbox[type=password]#password", {
+				oninput: (e: Event) => {
+					const { target } = e
+					if (target) UserCreateSchema.password = (target as HTMLInputElement).value
+				},
+				value: UserCreateSchema.password,
+			}),
+			m("label.form-label", "Confirm password"),
+			m("input.form-textbox[type=password]#password-confirm", {
+				oninput: (e: Event) => {
+					const { target } = e
+					if (target) UserCreateSchema.confirmPassword = (target as HTMLInputElement).value
+				},
+				value: UserCreateSchema.confirmPassword,
+			}),
+			m("label.form-label", "Permissions"),
+			m(PermissionWidget, {
+				perms: UserCreateSchema.permissions,
+			}),
+			m("button.form-button", {
+				onclick: async () => {
+					await UserCreateSchema.create()
+				},
+			}, "Create user"),
+			m(".form-error", UserCreateSchema.error)
+		)
+	}
+}
 
 interface SerializedSettings {
 	default_permissions: PermissionID[]
@@ -29,10 +99,10 @@ const SettingsModel = {
 }
 
 const ServerSettings: Component = {
-	oncreate: async (vnode) => {
+	oncreate: async () => {
 		await SettingsModel.init()
 	},
-	view: (vnode) => {
+	view: () => {
 		if (!SettingsModel.initialized) {
 			return
 		}
@@ -57,9 +127,9 @@ const ServerSettings: Component = {
 const AdminView: Component = {
 	view: function() {
 		return m(".admin", m("h1", "Administration"),
-			m("h2", "Users"), m(UserList),
+			m("h2", "Users"), m(UserListComp),
 			m("h3", "Create user"),
-			m("t", "TODO"),
+			m(UserCreate),
 			m(ServerSettings),
 		)
 	}

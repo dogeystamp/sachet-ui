@@ -11,7 +11,7 @@ export const permissions = {
 		desc: "Create shares / upload files."
 	},
 	"MODIFY": {
-		desc: "Modify your own shares and their metadata."
+		desc: "Modify their own shares and their metadata."
 	},
 	"DELETE": {
 		desc: "Delete any share."
@@ -30,7 +30,7 @@ export declare namespace PermissionWidget {
 	interface Attrs {
 		// pass these by reference
 		perms: PermissionID[]
-		flag: {changed: boolean}
+		flag?: { changed: boolean }
 	}
 }
 
@@ -52,7 +52,9 @@ export const PermissionWidget: Component<PermissionWidget.Attrs> = {
 								vnode.attrs.perms.splice(vnode.attrs.perms.indexOf(permId))
 							}
 						}
-						vnode.attrs.flag.changed = true
+						if (vnode.attrs.flag !== undefined) {
+							vnode.attrs.flag.changed = true
+						}
 					}
 				}),
 				m("label.form-label", permissions[permId].desc),
