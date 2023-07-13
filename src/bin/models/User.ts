@@ -3,17 +3,7 @@ import { PropertyValidatorError, f, validatedPlainToClass } from "@marcj/marshal
 import "reflect-metadata"
 import "moment"
 import Pager from "../services/pagination";
-import Auth from "./Auth";
-
-export enum Permissions {
-	CREATE,
-	MODIFY,
-	DELETE,
-	LOCK,
-	LIST,
-	READ,
-	ADMIN
-}
+import Auth, { PermissionID, permissions } from "./Auth";
 
 export class User {
 	@f.primary()
@@ -22,12 +12,12 @@ export class User {
 	register_date: moment.Moment
 	@f.validator((perms: any) => {
 		for (const perm of perms) {
-			if (Permissions[perm] === undefined) {
+			if (!Object.keys(permissions).includes(perm)) {
 				return new PropertyValidatorError("invalid_perm", `Invalid permission name: ${perm}`)
 			}
 		}
 	})
-	permissions: Permissions[]
+	permissions: PermissionID[]
 }
 
 export const UserList = {

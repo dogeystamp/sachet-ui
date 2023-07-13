@@ -3,20 +3,7 @@ import { UserList, UserModel } from "../models/User"
 import Auth from "../models/Auth";
 import { formatDate } from "../services/util";
 import api from "../services/api";
-
-enum ConfirmState {
-	Normal,
-	AwaitConfirm,
-}
-export declare namespace UserView {
-	interface State {
-		model: UserModel
-		deleteState: ConfirmState
-	}
-	interface Attrs {
-		username: string
-	}
-}
+import { PermissionWidget } from "../components/PermissionWidget";
 
 const PwChangeSchema = {
 	oldPass: "",
@@ -106,6 +93,60 @@ const PwChangeComp: Component = {
 	}
 }
 
+export declare namespace PermissionComp {
+	interface State {
+		flag: {
+			changed: boolean
+		}
+	}
+	interface Attrs {
+		model: UserModel
+	}
+}
+const PermissionComp: Component<PermissionComp.Attrs, PermissionComp.State> = {
+	oninit: (vnode) => {
+		vnode.state.flag = { changed: false }
+	},
+	view: (vnode) => {
+		const meta = vnode.attrs.model.meta
+		const readonly = !Auth.checkPerm("ADMIN")
+		return [
+			m("b.field-title", "Permissions: "),
+			m(PermissionWidget, {
+				perms: meta.permissions,
+				readonly: readonly,
+				flag: vnode.state.flag,
+			}),
+			!readonly && m("button.form-button", {
+				onclick: async () => {
+					await api.request({
+						url: `/users/${meta.username}`, method: "PATCH", body: {
+							permissions: meta.permissions
+						}
+					})
+					vnode.state.flag.changed = false
+					UserList.reload()
+				},
+				disabled: !vnode.state.flag.changed
+			}, "Save permissions")
+		]
+	}
+}
+
+enum ConfirmState {
+	Normal,
+	AwaitConfirm,
+}
+export declare namespace UserView {
+	interface State {
+		model: UserModel
+		deleteState: ConfirmState
+	}
+	interface Attrs {
+		username: string
+	}
+}
+
 const UserView: Component<UserView.Attrs, UserView.State> = {
 	oninit: async (vnode) => {
 		vnode.state.model = new UserModel(vnode.attrs.username)
@@ -130,10 +171,8 @@ const UserView: Component<UserView.Attrs, UserView.State> = {
 					m("b.field-title", "Registration: "),
 					m("t.field-content", formatDate({ date: meta.register_date }))
 				),
-				// TODO: make a better widget for permissions
 				m("li.field",
-					m("b.field-title", "Permissions: "),
-					m("t.field-content", meta.permissions.join(", "))
+					m(PermissionComp, { model: vnode.state.model, })
 				),
 			),
 			Auth.username == meta.username && m("button.form-button", {

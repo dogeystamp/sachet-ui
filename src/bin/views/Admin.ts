@@ -1,8 +1,9 @@
 import m, { Component } from "mithril"
 import UserListComp from "../components/UserList"
-import { PermissionID, PermissionWidget } from "../components/PermissionWidget"
+import { PermissionWidget } from "../components/PermissionWidget"
 import api from "../services/api"
 import { UserList } from "../models/User"
+import { PermissionID } from "../models/Auth"
 
 const UserCreateSchema = {
 	error: "",

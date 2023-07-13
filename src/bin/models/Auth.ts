@@ -3,6 +3,32 @@ import m from "mithril"
 
 type logoutHook = () => void;
 
+export const permissions = {
+	"READ": {
+		desc: "Read any share."
+	},
+	"LIST": {
+		desc: "See the list of all shares on this server."
+	},
+	"CREATE": {
+		desc: "Create shares / upload files."
+	},
+	"MODIFY": {
+		desc: "Modify their own shares and their metadata."
+	},
+	"DELETE": {
+		desc: "Delete any share."
+	},
+	"LOCK": {
+		desc: "Lock/unlock any share."
+	},
+	"ADMIN": {
+		desc: "Administrate the server."
+	},
+}
+
+export type PermissionID = keyof typeof permissions
+
 const Auth = {
 	login: async ({ username, password }: { username: string, password: string }) => {
 		interface LoginRes {
@@ -43,7 +69,7 @@ const Auth = {
 	getPerms: async () => {
 		interface WhoamiRes {
 			username: string
-			permissions: string[]
+			permissions: PermissionID[]
 		}
 		const whoamiRes: WhoamiRes = await api.request({
 			url: "/whoami", method: "get"
@@ -52,7 +78,7 @@ const Auth = {
 		Auth.permissions = whoamiRes.permissions
 		Auth._gotPerms = true
 	},
-	checkPerm: (perm: string, options: { redirect: boolean } = { redirect: false }) => {
+	checkPerm: (perm: PermissionID, options: { redirect: boolean } = { redirect: false }) => {
 		if (Auth.permissions.includes(perm)) {
 			return true
 		} else {
@@ -62,7 +88,7 @@ const Auth = {
 			return false
 		}
 	},
-	permissions: [] as string[]
+	permissions: [] as PermissionID[]
 }
 
 export default Auth
