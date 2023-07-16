@@ -7,9 +7,15 @@ import ShareView from "./views/ShareView"
 
 import Auth from "./models/Auth"
 import LoginView from "./views/LoginView"
+import HomeView from "./views/Home"
 import UploadView from "./views/Upload"
 Auth.getPerms().then(() => {
 	m.route(document.body, "/files", {
+		"/": {
+			render: function() {
+				return m(Layout, m(HomeView))
+			}
+		},
 		"/admin": {
 			render: function() {
 				return m(Layout, m(AdminView))
