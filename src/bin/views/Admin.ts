@@ -3,7 +3,7 @@ import UserListComp from "../components/UserList"
 import { PermissionWidget } from "../components/PermissionWidget"
 import api from "../services/api"
 import { UserList } from "../models/User"
-import { PermissionID } from "../models/Auth"
+import Auth, { PermissionID } from "../models/Auth"
 
 const UserCreateSchema = {
 	error: "",
@@ -140,6 +140,9 @@ const AdminView: Component = {
 	onremove: function() {
 		UserCreateSchema.reset()
 		SettingsModel.reset()
+	},
+	oninit: () => {
+		Auth.checkPerm("ADMIN", { redirect: true })
 	},
 	view: function() {
 		return m(".admin", m("h1", "Administration"),

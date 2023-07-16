@@ -82,8 +82,12 @@ const Auth = {
 		if (Auth.permissions.includes(perm)) {
 			return true
 		} else {
-			if (options.redirect === true && !Auth.authenticated) {
-				m.route.set("/login", { next: m.route.get() })
+			if (options.redirect === true) {
+				if (!Auth.authenticated) {
+					m.route.set("/login", { next: m.route.get() })
+				} else {
+					m.route.set("/")
+				}
 			}
 			return false
 		}
