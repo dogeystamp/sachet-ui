@@ -8,51 +8,77 @@ import { PermissionWidget } from "../components/PermissionWidget";
 const PwChangeSchema = {
 	oldPass: "",
 	newPass: "",
+	username: undefined,
 	confirmPass: "",
 	error: null,
+	get adminChange() {
+		if (PwChangeSchema.username === undefined) {
+			return false
+		}
+		return PwChangeSchema.username != Auth.username
+	},
 	change: async () => {
 		if (PwChangeSchema.newPass != PwChangeSchema.confirmPass) {
 			PwChangeSchema.error = "Passwords do not match."
 			return
 		}
-		try {
+		if (PwChangeSchema.adminChange) {
 			await api.request({
-				url: "/users/password", method: "POST", body: {
-					old: PwChangeSchema.oldPass,
-					new: PwChangeSchema.newPass,
+				url: "/users/" + PwChangeSchema.username, method: "PATCH", body: {
+					password: PwChangeSchema.newPass,
 				}
 			})
-		} catch (e) {
-			if (e.code == 403) {
-				PwChangeSchema.error = "Incorrect password."
+		} else {
+			try {
+				await api.request({
+					url: "/users/password", method: "POST", body: {
+						old: PwChangeSchema.oldPass,
+						new: PwChangeSchema.newPass,
+					}
+				})
+			} catch (e) {
+				if (e.code == 403) {
+					PwChangeSchema.error = "Incorrect password."
+				}
+				return
 			}
-			return
 		}
+		PwChangeSchema.reset()
+		PwChangeSchema.error = "Password changed."
+	},
+	reset: () => {
 		PwChangeSchema.oldPass = ""
 		PwChangeSchema.newPass = ""
 		PwChangeSchema.confirmPass = ""
-		PwChangeSchema.error = "Password changed."
 	}
 }
 
-const PwChangeComp: Component = {
+const PwChangeComp: Component<{ username: string }> = {
+	oninit(vnode) {
+		PwChangeSchema.username = vnode.attrs.username
+	},
+	onremove() {
+		PwChangeSchema.reset()
+		PwChangeSchema.username = undefined
+	},
 	view: () => {
 		return m(".pwchange-form",
-			m("label.form-label", "Current password"),
-			m("input.form-textbox#curpw[type=password]",
-				{
-					oninput: (e: Event) => {
-						const { target } = e
-						if (target) PwChangeSchema.oldPass = (target as HTMLInputElement).value
+			!PwChangeSchema.adminChange && [
+				m("label.form-label", "Current password"),
+				m("input.form-textbox#curpw[type=password]",
+					{
+						oninput: (e: Event) => {
+							const { target } = e
+							if (target) PwChangeSchema.oldPass = (target as HTMLInputElement).value
+						},
+						onkeypress: async (e: KeyboardEvent) => {
+							if (e.key == "Enter") {
+								await PwChangeSchema.change()
+							}
+						},
+						value: PwChangeSchema.oldPass
 					},
-					onkeypress: async (e: KeyboardEvent) => {
-						if (e.key == "Enter") {
-							await PwChangeSchema.change()
-						}
-					},
-					value: PwChangeSchema.oldPass
-				},
-			),
+				)],
 			m("label.form-label", "New password"),
 			m("input.form-textbox#newpw[type=password]",
 				{
@@ -181,9 +207,7 @@ const UserView: Component<UserView.Attrs, UserView.State> = {
 				}
 			}, "Log out"),
 			m("h3", "Change password"),
-			Auth.username == meta.username ?
-				m(PwChangeComp) :
-				m("t", "Sorry, admins can't change passwords yet..."),
+			m(PwChangeComp, { username: meta.username }),
 			Auth.checkPerm("ADMIN") &&
 			Auth.username != meta.username &&
 			m("button.form-button", {
