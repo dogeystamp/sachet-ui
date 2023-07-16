@@ -12,6 +12,9 @@ const ShareListView: Component = {
 			}
 		}
 	},
+	onremove: () => {
+		ShareList.reset()
+	},
 	view: function() {
 		return [
 			m("h2", "Shares"),

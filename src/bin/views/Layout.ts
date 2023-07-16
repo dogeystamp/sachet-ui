@@ -8,10 +8,10 @@ const Layout: Component = {
 			m(".header", [
 				m("h2.header-title", "Sachet"),
 				m("nav.menu", [
-					m(m.route.Link, {href: "/docs"}, "Help"),
-					Auth.checkPerm("LIST") && m(m.route.Link, {href: "/files"}, "Shares"),
-					Auth.checkPerm("CREATE") && m(m.route.Link, {href: "/upload"}, "Upload"),
-					Auth.checkPerm("ADMIN") && m(m.route.Link, {href: "/admin"}, "Admin"),
+					m(m.route.Link, { href: "/docs" }, "Help"),
+					Auth.checkPerm("LIST") && m(m.route.Link, { href: "/files" }, "Shares"),
+					Auth.checkPerm("CREATE") && m(m.route.Link, { href: "/upload" }, "Upload"),
+					Auth.checkPerm("ADMIN") && m(m.route.Link, { href: "/admin" }, "Admin"),
 				]),
 				m(UserWidget)
 			]),

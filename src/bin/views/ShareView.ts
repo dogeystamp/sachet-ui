@@ -23,6 +23,9 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 		vnode.state.model = new ShareModel(vnode.attrs.fileId)
 		vnode.state.delete = ConfirmState.Normal
 	},
+	onremove: async (vnode) => {
+		vnode.state.model.reset()
+	},
 	view: (vnode) => {
 
 		const meta = vnode.state.model.meta

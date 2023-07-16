@@ -5,6 +5,9 @@ import PageList from "./PageList"
 import Auth from "../models/Auth"
 
 const UserListComp: Component = {
+	onremove: () => {
+		UserList.reset()
+	},
 	oncreate: () => {
 		if (UserList.pager.page == null) {
 			if (Auth.checkPerm("ADMIN", { redirect: true })) {

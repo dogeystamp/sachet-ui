@@ -42,7 +42,11 @@ class Pager<T> {
 	constructor(opts: PagerArgs) {
 		this.per_page = opts.per_page
 		this.url = opts.url
-		Auth.addLogoutHook(() => {this._page = null})
+		this.pages = undefined
+	}
+
+	async reset() {
+		this._page = null
 	}
 }
 

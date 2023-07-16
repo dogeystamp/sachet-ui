@@ -30,12 +30,13 @@ export const UserList = {
 			return validatedPlainToClass(User, user)
 		});
 	},
+	reset: async function() {
+		UserList.list = []
+		UserList.pager.reset()
+	},
 	reload: async function() {
 		if (UserList.pager.page == null) {
 			await UserList.loadList(1)
-			Auth.addLogoutHook(() => {
-				UserList.list = []
-			})
 		}
 		else {
 			await UserList.loadList(UserList.pager.page)
@@ -53,9 +54,9 @@ export const loadUser = async (username: string) => {
 export class UserModel {
 	constructor(username: string) {
 		this.loadMeta(username)
-		Auth.addLogoutHook(() => {
-			this.meta = null
-		})
+	}
+	reset = () => {
+		this.meta = null
 	}
 	loadMeta = async (username: string) => {
 		try {

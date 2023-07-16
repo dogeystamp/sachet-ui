@@ -33,13 +33,14 @@ const ShareList = {
 	reload: async function() {
 		if (ShareList.pager.page == null) {
 			await ShareList.loadList(1)
-			Auth.addLogoutHook(() => {
-				ShareList.list = []
-			})
 		}
 		else {
 			await ShareList.loadList(ShareList.pager.page)
 		}
+	},
+	async reset() {
+		ShareList.list = []
+		ShareList.pager.reset()
 	}
 }
 
@@ -50,10 +51,10 @@ export default ShareList
 export class ShareModel {
 	constructor(shareId: string) {
 		this.loadMeta(shareId)
-		Auth.addLogoutHook(() => {
-			this.meta = null
-			this.data = null
-		})
+	}
+	async reset() {
+		this.meta = null
+		this.data = null
 	}
 	loadMeta = async (shareId: string) => {
 		try {

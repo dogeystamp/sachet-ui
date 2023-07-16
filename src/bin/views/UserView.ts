@@ -178,6 +178,9 @@ const UserView: Component<UserView.Attrs, UserView.State> = {
 		vnode.state.model = new UserModel(vnode.attrs.username)
 		vnode.state.deleteState = ConfirmState.Normal
 	},
+	onremove: (vnode) => {
+		vnode.state.model.reset()
+	},
 	view: (vnode) => {
 		const meta = vnode.state.model.meta
 

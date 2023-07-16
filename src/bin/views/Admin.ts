@@ -23,13 +23,16 @@ const UserCreateSchema = {
 				permissions: this.permissions
 			}
 		})
+		this.reset()
+		this.error = "User created."
+		UserList.reload()
+		m.redraw()
+	},
+	reset: function() {
 		this.username = ""
 		this.password = ""
 		this.confirmPassword = ""
 		this.permissions = []
-		this.error = "User created."
-		UserList.reload()
-		m.redraw()
 	}
 }
 
@@ -92,6 +95,14 @@ const SettingsModel = {
 		SettingsModel.flag.changed = false
 	},
 
+	reset: function() {
+		this.default_permissions = null
+		this.initialized = false
+		this.flag = {
+			changed: false,
+		}
+	},
+
 	default_permissions: null as PermissionID[],
 	flag: {
 		changed: false,
@@ -126,6 +137,10 @@ const ServerSettings: Component = {
 	}
 }
 const AdminView: Component = {
+	onremove: function() {
+		UserCreateSchema.reset()
+		SettingsModel.reset()
+	},
 	view: function() {
 		return m(".admin", m("h1", "Administration"),
 			m("h2", "Users"), m(UserListComp),
