@@ -20,6 +20,12 @@
 }
 
 .entrylist-row:hover {
-	background: #dddddd;
+	background: #dddddd55;
 	cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+	.entrylist-row:nth-child(even) {
+		background-color: #b1b1b155;
+	}
 }

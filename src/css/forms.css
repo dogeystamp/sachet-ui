@@ -7,7 +7,7 @@
 	padding: 1em 4em;
 	flex-flow: column nowrap;
 	align-items: center;
-	border: solid #dddddd 2px;
+	border: solid #dddddd55 2px;
 	border-radius: .5vmin;
 	background: #fafafa;
 }
@@ -24,10 +24,6 @@
 	margin: .5em 0;
 }
 
-.form-textbox {
-	background: #fdfdfd;
-}
-
 .form-textbox, .form-button {
 	border: 2px solid #aaaaaa;
 	border-radius: 0.5vmin;
@@ -36,9 +32,6 @@
 
 .form-textbox:focus, .form-button:focus {
 	outline: none;
-}
-
-.form-textbox:focus, .form-button:focus {
 	border: 2px solid #444444;
 }
 
@@ -51,4 +44,28 @@
 .form-readonly {
 	opacity: 0.75;
 	pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+	.login-form {
+		background: #55555555;
+	}
+	.form-button {
+		border: 2px solid #606060;
+	}
+	.form-textbox {
+		border: 2px solid #444444;
+	}
+	.form-button, .form-textbox {
+		background: #44444455;
+		color: inherit;
+	}
+	.form-button:disabled {
+		color: #444444;
+		border: 2px solid #505050;
+	}
+
+	.form-textbox:focus, .form-button:focus {
+		border: 2px solid #aaaaaa;
+	}
 }

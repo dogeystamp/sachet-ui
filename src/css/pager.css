@@ -11,12 +11,12 @@
 }
 
 .pagelist-next, .pagelist-prev {
-	color: black;
+	color: #444444;
 	margin: 0 1em;
 }
 
 .pagelist-cur {
-	color: black;
+	color: #555555;
 	font-weight: bold;
 	text-decoration: underline;
 }

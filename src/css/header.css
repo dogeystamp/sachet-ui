@@ -53,3 +53,9 @@ a.header-title-link {
 		text-align: center;
 	}
 }
+
+@media (prefers-color-scheme: dark) {
+	.header {
+		border-bottom: 1px solid #dddddd;
+	}
+}
