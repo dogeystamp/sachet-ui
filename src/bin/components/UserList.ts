@@ -30,7 +30,10 @@ const UserListComp: Component = {
 							href: "/users/" + user.username,
 							selector: "tr.entrylist-row",
 						},
-						m("td", user.username),
+						m("td", m(m.route.Link, {
+							href: "/users/" + user.username,
+							selector: "a.entrylist-link"
+						}, user.username)),
 						m("td", user.permissions.join(", ")),
 						m("td", formatDate({ date: user.register_date }))
 					)

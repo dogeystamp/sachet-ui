@@ -31,7 +31,10 @@ const ShareListView: Component = {
 								href: "/files/" + share.share_id,
 								selector: "tr.entrylist-row",
 							},
-							m("td", share.file_name),
+							m("td", m(m.route.Link, {
+								href: "/files/" + share.share_id,
+								selector: "a.entrylist-link",
+							}, share.file_name)),
 							m("td", share.owner_name || "[Anonymous]"),
 							m("td", formatDate({ date: share.create_date, relative: true })),
 						)

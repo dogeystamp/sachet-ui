@@ -5,6 +5,10 @@
 	justify-content: center;
 }
 
+.pagelist-number {
+	color: #888888;
+}
+
 .pagelist-number, .pagelist-cur {
 	margin: 0 .2em;
 	text-decoration: none;
@@ -19,4 +23,16 @@
 	color: #555555;
 	font-weight: bold;
 	text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+	.pagelist-next, .pagelist-prev {
+		color: #777777;
+	}
+	.pagelist-cur {
+		color: #bbbbbb;
+	}
+	.pagelist-number {
+		color: #999999;
+	}
 }

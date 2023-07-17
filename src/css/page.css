@@ -3,13 +3,6 @@ body {
 	margin: 0;
 }
 
-a {
-	color: #aaaadd;
-}
-a:visited {
-	color: #6666aa;
-}
-
 .layout {
 	margin: 0 auto;
 	width: 85vmin;
@@ -19,11 +12,5 @@ a:visited {
 	body {
 		background-color: #202025;
 		color: #dddddd;
-	}
-	a {
-		color: #cacaee;
-	}
-	a:visited {
-		color: #c6c6dd;
 	}
 }

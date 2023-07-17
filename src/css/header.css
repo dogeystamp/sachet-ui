@@ -11,6 +11,13 @@ a.header-title-link {
 	text-decoration: none;
 }
 
+a.header-link {
+	color: #aaaadd;
+}
+a.header-link:visited {
+	color: #aaaadd;
+}
+
 .menu {
 	display: flex;
 	flex-flow: row nowrap;
@@ -57,5 +64,11 @@ a.header-title-link {
 @media (prefers-color-scheme: dark) {
 	.header {
 		border-bottom: 1px solid #dddddd;
+	}
+	a.header-link {
+		color: #cacaee;
+	}
+	a.header-link:visited {
+		color: #cacaee;
 	}
 }
