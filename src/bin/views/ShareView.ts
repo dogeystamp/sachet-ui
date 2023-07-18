@@ -42,6 +42,7 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 
 		const deleteButton =
 			Auth.permissions.includes("DELETE") &&
+			!meta.locked &&
 			m("button.form-button", {
 				onclick: async () => {
 					switch (vnode.state.delete) {
@@ -90,6 +91,12 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 			}, "Download"),
 			dl.status != 0 && m("li.field", `Progress: ${formatBytes(dl.loaded)} / ${formatBytes(dl.total)}`),
 			deleteButton,
+			Auth.checkPerm("LOCK") &&
+			m("button.form-button", {
+				onclick: () => {
+					vnode.state.model.setLock(!meta.locked)
+				}
+			}, meta.locked ? "Unlock" : "Lock")
 		]
 	}
 }

@@ -4,7 +4,6 @@ import "moment"
 import Pager from "../services/pagination";
 import api from "../services/api";
 import m from "mithril"
-import Auth from "./Auth";
 
 export class Share {
 	@f.primary().uuid()
@@ -50,21 +49,30 @@ export default ShareList
 
 export class ShareModel {
 	constructor(shareId: string) {
-		this.loadMeta(shareId)
+		this.shareId = shareId
+		this.loadMeta()
 	}
+
+	shareId: string
+
 	async reset() {
 		this.meta = null
 		this.data = null
+		this.shareId = null
 	}
-	loadMeta = async (shareId: string) => {
+	async loadMeta() {
 		try {
-			const resp = await api.request<Share>({ url: "/files/" + shareId, method: "GET" })
+			const resp = await api.request<Share>({ url: "/files/" + this.shareId, method: "GET" })
 			this.meta = validatedPlainToClass(Share, resp)
 		} catch (e) {
 			if (e.code == 404) {
 				this.meta = null
 			}
 		}
+	}
+	async setLock(state: boolean) {
+		await api.request({ url: `/files/${this.shareId}/${state ? "lock" : "unlock"}`, method: "POST" })
+		this.meta.locked = state
 	}
 	meta: Share
 	data: Blob
