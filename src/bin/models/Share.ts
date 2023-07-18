@@ -67,6 +67,8 @@ export class ShareModel {
 		} catch (e) {
 			if (e.code == 404) {
 				this.meta = null
+			} else if (e.code == 403) {
+				this.meta = null
 			}
 		}
 	}

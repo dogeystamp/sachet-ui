@@ -27,9 +27,15 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 		vnode.state.model.reset()
 	},
 	view: (vnode) => {
-
 		const meta = vnode.state.model.meta
 		const dl = vnode.state.model.dl
+
+		if (!Auth.checkPerm("READ")) {
+			return [
+				m("h2", "Permission denied"),
+				m("p", "You do not have the permission to read this share. Contact an administrator for more details.")
+			]
+		}
 
 		if (meta === undefined) {
 			return
