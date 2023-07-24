@@ -2,6 +2,7 @@ import m, { Component } from "mithril";
 import ShareList, { ShareModel } from "../models/Share";
 import { formatBytes, formatDate } from "../services/util";
 import Auth from "../models/Auth";
+import ShareModify from "../components/ShareModify";
 
 enum ConfirmState {
 	Normal,
@@ -102,7 +103,9 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 				onclick: () => {
 					vnode.state.model.setLock(!meta.locked)
 				}
-			}, meta.locked ? "Unlock" : "Lock")
+			}, meta.locked ? "Unlock" : "Lock"),
+			Auth.checkPerm("MODIFY") && !meta.locked && Auth.username == meta.owner_name &&
+			m(ShareModify, { model: vnode.state.model })
 		]
 	}
 }

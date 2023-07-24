@@ -76,6 +76,10 @@ export class ShareModel {
 		await api.request({ url: `/files/${this.shareId}/${state ? "lock" : "unlock"}`, method: "POST" })
 		this.meta.locked = state
 	}
+	async rename(filename: string) {
+		await api.request({ url: `/files/${this.shareId}`, method: "PATCH", body: { file_name: filename } })
+		this.meta.file_name = filename
+	}
 	meta: Share
 	data: Blob
 	dl = {
