@@ -71,12 +71,20 @@ const Auth = {
 			username: string
 			permissions: PermissionID[]
 		}
-		const whoamiRes: WhoamiRes = await api.request({
-			url: "/whoami", method: "get"
-		})
-		Auth.username = whoamiRes.username
-		Auth.permissions = whoamiRes.permissions
-		Auth._gotPerms = true
+		try {
+			const whoamiRes: WhoamiRes = await api.request({
+				url: "/whoami", method: "get"
+			})
+			Auth.username = whoamiRes.username
+			Auth.permissions = whoamiRes.permissions
+			Auth._gotPerms = true
+		} catch (e) {
+			if (e.code == 401) {
+				await Auth.logout()
+				return
+			}
+			throw e
+		}
 	},
 	checkPerm: (perm: PermissionID, options: { redirect: boolean } = { redirect: false }) => {
 		if (Auth.permissions.includes(perm)) {
