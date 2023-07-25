@@ -80,6 +80,10 @@ export class ShareModel {
 		await api.request({ url: `/files/${this.shareId}`, method: "PATCH", body: { file_name: filename } })
 		this.meta.file_name = filename
 	}
+	async transferOwner(ownerName: string) {
+		await api.request({ url: `/files/${this.shareId}`, method: "PATCH", body: { owner_name: ownerName } })
+		this.meta.owner_name = ownerName
+	}
 	meta: Share
 	data: Blob
 	dl = {
