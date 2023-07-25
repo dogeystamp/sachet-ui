@@ -73,6 +73,7 @@ const ShareModify: Component<ShareModify.Attrs> = {
 					} catch (e) {
 						if (e.code == 400) {
 							ShareModifySchema.error = `Could not transfer ownership to user '${ShareModifySchema.ownerName}'.`
+							return
 						}
 						throw e
 					}
