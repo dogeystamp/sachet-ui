@@ -71,6 +71,14 @@ export class ShareModel {
 				this.meta = null
 			}
 		}
+		const range = await api.request<number>({
+			url: "/files/" + this.meta.share_id + "/content",
+			method: "HEAD",
+			extract: xhr => {
+				return Number(xhr.getResponseHeader("content-length"))
+			}
+		})
+		this.size = range
 	}
 	async setLock(state: boolean) {
 		await api.request({ url: `/files/${this.shareId}/${state ? "lock" : "unlock"}`, method: "POST" })
@@ -86,6 +94,7 @@ export class ShareModel {
 	}
 	meta: Share
 	data: Blob
+	size = 0
 	dl = {
 		loaded: 0,
 		total: 0,

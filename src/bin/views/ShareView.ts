@@ -90,6 +90,10 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 					m("b.field-title", "Locked: "),
 					m("t.field-content", meta.locked ? "Yes" : "No")
 				),
+				m("li.field",
+					m("b.field-title", "Size: "),
+					m("t.field-content", formatBytes(vnode.state.model.size))
+				),
 			),
 			m("button.form-button", {
 				onclick: async () => {
