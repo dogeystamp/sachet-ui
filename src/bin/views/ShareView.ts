@@ -38,7 +38,7 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 			]
 		}
 
-		if (meta === undefined) {
+		if (!vnode.state.model.loaded) {
 			return
 		} else if (meta == null) {
 			return [
@@ -101,10 +101,11 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 			),
 			m("button.form-button", {
 				onclick: async () => {
-					dl.start()
+					await dl.start()
+					await dl.open()
 				}
 			}, "Download"),
-			dl.status != 0 && m("li.field", `Progress: ${formatBytes(dl.loaded)} / ${formatBytes(dl.total)}`),
+			dl.status != 0 && dl.loaded != dl.total && m("li.field", `Progress: ${formatBytes(dl.loaded)} / ${formatBytes(dl.total)}`),
 			deleteButton,
 			Auth.checkPerm("LOCK") &&
 			m("button.form-button", {

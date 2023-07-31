@@ -83,6 +83,10 @@ export class ShareModel {
 		})
 		this.size = range
 		this.mimeType = mime
+		if (this.size < 25e6) {
+			await this.dl.start()
+		}
+		this.loaded = true
 	}
 	async setLock(state: boolean) {
 		await api.request({ url: `/files/${this.shareId}/${state ? "lock" : "unlock"}`, method: "POST" })
@@ -100,14 +104,16 @@ export class ShareModel {
 	data: Blob
 	size = 0
 	mimeType: string
+	loaded: boolean
 	dl = {
 		loaded: 0,
 		total: 0,
 		status: 0,
+		blob: undefined as Blob,
 		start: async () => {
 			if (this.dl.status != 0) return
 
-			const blob: Blob = await api.request({
+			this.dl.blob = await api.request({
 				url: "/files/" + this.meta.share_id + "/content",
 				responseType: "blob",
 				extract: xhr => xhr.response,
@@ -121,7 +127,9 @@ export class ShareModel {
 					}
 				}
 			})
-			const blobUrl = window.URL.createObjectURL(blob)
+		},
+		open: async () => {
+			const blobUrl = window.URL.createObjectURL(this.dl.blob)
 			const anchor = document.createElement("a")
 			anchor.href = blobUrl
 			anchor.download = this.meta.file_name
