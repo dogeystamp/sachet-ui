@@ -94,6 +94,10 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 					m("b.field-title", "Size: "),
 					m("t.field-content", formatBytes(vnode.state.model.size))
 				),
+				m("li.field",
+					m("b.field-title", "MIME type: "),
+					m("t.field-content", vnode.state.model.mimeType)
+				),
 			),
 			m("button.form-button", {
 				onclick: async () => {
