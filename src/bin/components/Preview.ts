@@ -13,7 +13,8 @@ const Preview: Component<Preview.Attrs> = {
 		const blob = vnode.attrs.blob
 
 		if (mimeType.startsWith("image/")) {
-			return m("img.thumbnail", { src: window.URL.createObjectURL(blob) })
+			const blobUrl = window.URL.createObjectURL(blob)
+			return m("a", { href: blobUrl }, m("img.thumbnail", { src: blobUrl })) 
 		} else if (mimeType.startsWith("video/")) {
 			return m("video.thumbnail[controls]", { src: window.URL.createObjectURL(blob) })
 		} else if (mimeType.startsWith("audio/")) {
