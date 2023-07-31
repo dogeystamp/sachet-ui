@@ -10,7 +10,7 @@ import LoginView from "./views/LoginView"
 import HomeView from "./views/Home"
 import UploadView from "./views/Upload"
 Auth.getPerms().then(() => {
-	m.route(document.body, "/files", {
+	m.route(document.body, "/", {
 		"/": {
 			render: function() {
 				return m(Layout, m(HomeView))

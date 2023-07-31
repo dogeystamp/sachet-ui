@@ -11,6 +11,7 @@ class Pager<T> {
 	data: T[] = []
 	per_page = 1
 	pages: number
+	loaded = false
 
 	private _page: number = null
 	public get page() {
@@ -34,6 +35,7 @@ class Pager<T> {
 
 		this.data = result.data
 		this.pages = result.pages
+		this.loaded = true
 		m.redraw()
 	}
 
@@ -46,7 +48,8 @@ class Pager<T> {
 	}
 
 	async reset() {
-		this._page = null
+		this.loaded = false
+		this.data = []
 	}
 }
 

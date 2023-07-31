@@ -6,7 +6,7 @@ import Auth from "../models/Auth"
 
 const ShareListView: Component = {
 	oncreate: async () => {
-		if (ShareList.pager.page == null) {
+		if (ShareList.pager.loaded == false) {
 			if (Auth.checkPerm("LIST", { redirect: true })) {
 				await ShareList.reload()
 			}

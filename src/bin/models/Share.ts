@@ -30,8 +30,8 @@ const ShareList = {
 		})
 	},
 	reload: async function() {
-		if (ShareList.pager.page == null) {
-			await ShareList.loadList(1)
+		if (ShareList.pager.loaded === false) {
+			await ShareList.loadList(ShareList.pager.page || 1)
 		}
 		else {
 			await ShareList.loadList(ShareList.pager.page)
