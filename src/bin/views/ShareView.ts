@@ -3,6 +3,7 @@ import ShareList, { ShareModel } from "../models/Share";
 import { formatBytes, formatDate } from "../services/util";
 import Auth from "../models/Auth";
 import ShareModify from "../components/ShareModify";
+import Preview from "../components/Preview";
 
 enum ConfirmState {
 	Normal,
@@ -77,6 +78,7 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 
 		return [
 			m("h2", "Share '" + meta.file_name + "'"),
+			m(Preview, { mimeType: vnode.state.model.mimeType, blob: dl.blob }),
 			m("ul.fields",
 				m("li.field",
 					m("b.field-title", "Creation date: "),
