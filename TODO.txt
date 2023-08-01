@@ -1,0 +1,99 @@
+LAST LEFT OFF:
+
+[x] design interface
+	[x] header
+	[x] login
+	[x] upload page
+	[x] navigation bar
+	[x] admin page
+	[x] share page
+	[x] share list
+
+[x] style
+	[x] make links not blue/purple
+	[x] make share/user lists have actual links (that qutebrowser can find)
+	[x] dark mode
+
+[x] header
+	[x] prototype
+	[ ] reponsive layout
+		[x] fix mobile layout header shrinking
+		[ ] hamburger menu for mobile
+	[x] make links display conditionally to permissions
+	[x] user widget
+		displays logged in as "user", or login otherwise
+
+[x] authentication
+	[x] login
+		[x] store Auth status in localStorage
+		[x] implement login page
+			[x] error handling
+			[x] style
+	[x] log out
+		[x] style
+	[x] remove logout hooks and put them in onremove
+	[x] log out if token returns expired
+	[ ] token renewal
+
+[x] self info
+	[x] who am i?
+	[x] what perms do i have?
+		[x] make a proper widget thing
+	[x] registration date
+	[x] password change
+		[x] fix password changed still being displayed after signing out/in
+	[x] administrator password change
+
+[x] home page (replace help page)
+	[x] show what perms i have
+
+[x] components/PageList
+	[x] make clicky page numbers
+	[x] style things
+
+[x] shares
+	[x] share page
+		[x] fix no progress issue
+		[x] add something if share is not initialized
+		[ ] implement chunked downloads
+			test with network throttling on
+			(periodically disconnect in the middle to see how it reacts)
+		[ ] allow download cancels
+		[x] if share is small enough preview image
+		[x] add 403 message
+	[x] listing
+		[x] pagination
+		[x] actually good list entries
+		[x] fix share list being empty on login
+		[x] fix share list not being empty on signout
+		[x] fix share list being empty on route change
+		[x] when backtracking to list save page number
+	[x] creating
+		[x] uploads
+		[ ] chunked uploads
+		[ ] upload progress
+	[x] deleting
+		[x] fix problem where deleted shares show up in the page still
+	[x] modifying
+		[x] lock/unlock
+		[x] change name
+		[x] reupload file
+		[x] transfer ownership
+
+[x] admin panel
+	[x] users
+		[x] listing
+			[x] pagination
+			[x] actually good list entries
+		[x] management
+			[x] deletion
+			[x] creation
+			[x] modification
+				[x] permissions
+				[x] password
+
+	[x] anon permissions
+
+[x] add favicon
+
+[ ] switch api URL with NODE_ENV
