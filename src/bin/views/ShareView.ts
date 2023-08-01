@@ -78,7 +78,7 @@ const ShareView: Component<ShareView.Attrs, ShareView.State> = {
 
 		return [
 			m("h2", "Share '" + meta.file_name + "'"),
-			m(Preview, { mimeType: vnode.state.model.mimeType, blob: dl.blob }),
+			dl.loaded == dl.total && m(Preview, { mimeType: vnode.state.model.mimeType, blob: dl.blob }),
 			m("ul.fields",
 				m("li.field",
 					m("b.field-title", "Creation date: "),

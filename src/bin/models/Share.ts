@@ -71,7 +71,7 @@ export class ShareModel {
 				this.meta = null
 			}
 		}
-		const {range, mime} = await api.request<{range: number, mime: string}>({
+		const { range, mime } = await api.request<{ range: number, mime: string }>({
 			url: "/files/" + this.meta.share_id + "/content",
 			method: "HEAD",
 			extract: xhr => {
@@ -84,7 +84,7 @@ export class ShareModel {
 		this.size = range
 		this.mimeType = mime
 		if (this.size < 25e6) {
-			await this.dl.start()
+			this.dl.start()
 		}
 		this.loaded = true
 	}

@@ -5,20 +5,33 @@ export declare namespace Preview {
 		mimeType: string
 		blob: Blob
 	}
+	interface State {
+		blobUrl: string
+	}
 }
 
-const Preview: Component<Preview.Attrs> = {
+const Preview: Component<Preview.Attrs, Preview.State> = {
 	view: (vnode) => {
-		const mimeType = vnode.attrs.mimeType
 		const blob = vnode.attrs.blob
+		const mimeType = vnode.attrs.mimeType
+		if (vnode.state.blobUrl === undefined) {
+			if (blob !== undefined) {
+				vnode.state.blobUrl = window.URL.createObjectURL(blob)
+			}
+		}
+
+		if (vnode.state.blobUrl === undefined) {
+			return null
+		}
+
+		const blobUrl = vnode.state.blobUrl
 
 		if (mimeType.startsWith("image/")) {
-			const blobUrl = window.URL.createObjectURL(blob)
 			return m("a", { href: blobUrl }, m("img.thumbnail", { src: blobUrl })) 
 		} else if (mimeType.startsWith("video/")) {
-			return m("video.thumbnail[controls]", { src: window.URL.createObjectURL(blob) })
+			return m("video.thumbnail[controls]", { src: blobUrl })
 		} else if (mimeType.startsWith("audio/")) {
-			return m("audio.thumbnail[controls]", { src: window.URL.createObjectURL(blob) })
+			return m("audio.thumbnail[controls]", { src: blobUrl })
 		}
 	}
 }
