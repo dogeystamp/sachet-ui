@@ -28,7 +28,8 @@ const UploadView: Component = {
 			m("button.form-button#upload-button", {
 				onclick: () => {
 					uploadSchema.upload()
-				}
+				},
+				disabled: uploadSchema.file_path == ""
 			}, "Upload"),
 		]
 	}

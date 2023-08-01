@@ -1,7 +1,7 @@
 import api from "../services/api";
 import { v4 as uuidv4 } from "uuid"
 
-export const UploadSchema = () => {
+export const UploadSchema = (shareId?: string) => {
 	return {
 		file_name: "",
 
@@ -26,13 +26,20 @@ export const UploadSchema = () => {
 				return
 			}
 
-			const share = await api.request<{ url: string }>({
-				url: "/files",
-				method: "POST",
-				body: {
-					"file_name": this.file_name
-				}
-			})
+			let url = "/files/" + shareId
+
+			const method = shareId === undefined ? "POST" : "PUT"
+
+			if (shareId === undefined) {
+				const share = await api.request<{ url: string }>({
+					url: "/files",
+					method: method,
+					body: {
+						"file_name": this.file_name
+					}
+				})
+				url = share.url
+			}
 
 			const upload_id = uuidv4()
 
@@ -43,15 +50,19 @@ export const UploadSchema = () => {
 			body.append("dzchunkindex", "0")
 
 			await api.request({
-				url: share.url + "/content",
-				method: "POST",
+				url: url + "/content",
+				method: method,
 				body: body
 			})
 
+			this.reset()
 			this.error = "File uploaded."
-			this.file_name = ""
-			this.file = null
-			this.file_path = ""
 		},
+		reset: function() {
+			this.file = null
+			this.file_name = ""
+			this.file_path = ""
+			this.error = null
+		}
 	}
 }
